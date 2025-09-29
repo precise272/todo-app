@@ -104,13 +104,14 @@ li input[type="checkbox"] {
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
-  height: auto; /* Ensure it grows with content */
-  overflow: visible; /* Prevent clipping */
+  width: 100%; /* 👈 This ensures it fills the available space */
+  overflow: visible;
 }
 
-
 .task-detail span {
+  display: block; /* 👈 Prevents inline collapse */
   flex: 1 1 auto;
+  width: 100%;    /* 👈 Ensures it fills the container */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
