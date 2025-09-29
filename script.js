@@ -21,6 +21,11 @@ addTaskBtn.addEventListener("click", () => {
   taskInput.value = "";
 });
 
+document.getElementById("toggleDarkMode").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
+
+
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
