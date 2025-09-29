@@ -115,6 +115,7 @@ li input[type="checkbox"] {
   cursor: pointer;
   transition: all 0.2s ease;
   max-height: 1.2em; /* default collapsed height */
+ width: 100%;
 }
 
 .task-detail span.expanded {
