@@ -99,7 +99,7 @@ li input[type="checkbox"] {
 
 .task-detail {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* stack text and category vertically */
   flex: 1 1 auto;
   overflow: hidden;
   width: 100%;
@@ -107,18 +107,19 @@ li input[type="checkbox"] {
 
 .task-detail span {
   display: block;
-  flex: 1 1 auto;
+  width: 100%;
   text-align: left;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
 .task-detail span.expanded {
   white-space: normal;
   word-break: break-word;
+  overflow: visible;
 }
 
 
