@@ -26,10 +26,10 @@ body.dark {
 
 body.dark .container {
   background: #2c2c2c;
-  color: #ddd;
 }
 
 /* — Form elements — */
+/* only make text inputs and selects full-width */
 input[type="text"],
 select {
   width: 100%;
@@ -41,6 +41,7 @@ select {
   border: 1px solid #ccc;
 }
 
+/* Full-width “Add Task” and toggle buttons */
 #addTaskBtn,
 #toggleDarkMode {
   width: 100%;
@@ -48,21 +49,40 @@ select {
   margin-bottom: 10px;
   box-sizing: border-box;
   font-size: 14px;
+}
+
+/* Leave checkboxes at auto width */
+li input[type="checkbox"] {
+  width: auto;
+  flex: 0 0 auto;
+  margin-right: 10px;
+}
+
+
+select, input {
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
   background: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  border-radius: 4px;
   transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+#addTaskBtn {
+  margin-bottom: 20px;
 }
 
 #toggleDarkMode {
   background: #444;
-}
-
-#addTaskBtn:hover,
-#toggleDarkMode:hover {
-  background: #0056b3;
 }
 
 body.dark #toggleDarkMode {
@@ -106,47 +126,35 @@ body.dark li {
   background: #444;
 }
 
-/* Checkbox stays at its own size */
+/* Checkbox always at left */
 li input[type="checkbox"] {
   flex: 0 0 auto;
   margin-right: 10px;
-  width: auto;
 }
 
-/* Middle wrapper: NO overflow hidden here */
+/* Text + category grouped in the middle */
 .task-detail {
   display: flex;
   align-items: center;
   flex: 1 1 auto;
-  /* REMOVED overflow: hidden; */
+  overflow: hidden;
 }
 
-/* Default: truncate with ellipsis */
 .task-detail span {
   flex: 1 1 auto;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;              /* show it’s clickable */
-  transition: all 0.2s ease;
 }
 
-/* Expanded: multiline, full text */
-.task-detail span.expanded {
-  white-space: normal;          /* wrap lines */
-  word-break: break-word;
-  overflow: visible;            /* show the full content */
-}
-
-/* Optional category tag */
 .task-detail small {
   margin-left: 8px;
   white-space: nowrap;
   color: #555;
 }
 
-/* Delete button pinned at right */
+/* Delete button pinned to right */
 .delete-btn {
   flex: 0 0 auto;
   margin-left: auto;
@@ -162,7 +170,7 @@ li input[type="checkbox"] {
   transform: scale(1.2);
 }
 
-/* Completed task style */
+/* Completed styling */
 .completed span {
   text-decoration: line-through;
   color: gray;
@@ -180,15 +188,12 @@ li input[type="checkbox"] {
   }
 }
 
-/* — Responsive tweaks — */
+/* — Simple responsive tweaks — */
 @media (max-width: 480px) {
   .container {
     padding: 15px;
   }
-  input[type="text"],
-  select,
-  #addTaskBtn,
-  #toggleDarkMode {
+  input, select, button {
     font-size: 16px;
   }
 }
