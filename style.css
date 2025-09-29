@@ -11,7 +11,8 @@ body {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
@@ -19,15 +20,22 @@ input {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 button {
-  width: 100%;
   padding: 10px;
   background: #007bff;
   color: white;
   border: none;
   cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+#addTaskBtn {
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 ul {
@@ -37,10 +45,23 @@ ul {
 
 li {
   background: #eee;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
+  word-break: break-word;
+}
+
+li button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #ff4d4d;
+  cursor: pointer;
+  margin-left: 10px;
+  flex-shrink: 0;
 }
 
 .completed {
