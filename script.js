@@ -241,11 +241,9 @@ function renderTasks(tasks) {
       del.className = "delete-btn";
       del.textContent = "❌";
       del.addEventListener("click", () => {
-        console.log("Deleting task:", task.id, task.text);
-  const updated = tasks.filter(t => t.id !== task.id);
-  saveAndRender(updated);
-});
-
+        const updated = tasks.filter(t => t.id !== task.id);
+        saveAndRender(updated);
+      });
 
       if (task.completed) li.classList.add("completed");
 
