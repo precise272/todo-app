@@ -66,7 +66,7 @@ function renderTasks(tasks) {
       const span = document.createElement("span");
       span.textContent = task.text;
 
-// Toggle expanded class on the text span only
+// 1) Toggle expanded class on the text span only
 span.addEventListener("click", e => {
   span.classList.toggle("expanded");
   // Prevent this click from also bubbling up (optional)
