@@ -1,12 +1,12 @@
-// script.js
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
+const categorySelect = document.getElementById("categorySelect");
 
 // Load tasks from localStorage
 window.onload = () => {
   const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  savedTasks.forEach(task => createTaskElement(task.text, task.completed));
+  savedTasks.forEach(task => createTaskElement(task.text, task.completed, task.category));
 };
 
 function createTaskElement(text, completed = false, category = "") {
@@ -24,9 +24,7 @@ function createTaskElement(text, completed = false, category = "") {
   span.textContent = text;
 
   const categoryTag = document.createElement("small");
-  categoryTag.textContent = category ? ` [${category}]` : "";
-  categoryTag.style.marginLeft = "5px";
-  categoryTag.style.color = "#555";
+  categoryTag.textContent = category ? `[${category}]` : "";
 
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "❌";
@@ -34,6 +32,8 @@ function createTaskElement(text, completed = false, category = "") {
     li.remove();
     saveTasks();
   });
+
+  if (completed) li.classList.add("completed");
 
   li.appendChild(checkbox);
   li.appendChild(span);
@@ -47,10 +47,8 @@ function saveTasks() {
   taskList.querySelectorAll("li").forEach(li => {
     const text = li.querySelector("span").textContent;
     const completed = li.querySelector("input[type='checkbox']").checked;
-
     const categoryRaw = li.querySelector("small").textContent;
     const category = categoryRaw.replace(/\[|\]/g, "").trim();
-
     tasks.push({ text, completed, category });
   });
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -58,7 +56,7 @@ function saveTasks() {
 
 addTaskBtn.addEventListener("click", () => {
   const taskText = taskInput.value.trim();
-  const category = document.getElementById("categorySelect").value;
+  const category = categorySelect.value;
   if (taskText === "") return;
   createTaskElement(taskText, false, category);
   saveTasks();
