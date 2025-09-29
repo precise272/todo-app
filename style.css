@@ -133,20 +133,7 @@ li input[type="checkbox"] {
 }
 
 /* Text + category grouped in the middle */
-.task-detail {
-  display: flex;
-  align-items: center;
-  flex: 1 1 auto;
-  overflow: hidden;
-}
-
-.task-detail span {
-  flex: 1 1 auto;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.task-detail span { display: block; flex: 1 1 auto; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; transition: all 0.2s ease; max-height: 1.2em; /* default collapsed height */ } .task-detail span.expanded { white-space: normal; word-break: break-word; overflow: visible; max-height: none; /* allow full expansion */ }
 
 .task-detail small {
   margin-left: 8px;
@@ -197,3 +184,4 @@ li input[type="checkbox"] {
     font-size: 16px;
   }
 }
+
