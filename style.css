@@ -109,20 +109,18 @@ li input[type="checkbox"] {
   display: block;
   flex: 1 1 auto;
   text-align: left;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
   transition: all 0.2s ease;
-  max-height: 1.2em; /* default collapsed height */
+  white-space: nowrap;
 }
 
 .task-detail span.expanded {
   white-space: normal;
   word-break: break-word;
-  overflow: visible;
-  max-height: none; /* allow full expansion */
 }
+
 
 .task-detail small {
   margin-left: 8px;
