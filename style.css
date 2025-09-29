@@ -113,12 +113,15 @@ li input[type="checkbox"] {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  transition: all 0.2s ease;
+  max-height: 1.2em; /* default collapsed height */
 }
 
 .task-detail span.expanded {
   white-space: normal;
   word-break: break-word;
   overflow: visible;
+  max-height: none; /* allow full expansion */
 }
 
 .task-detail small {
