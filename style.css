@@ -26,7 +26,6 @@ body.dark {
 
 body.dark .container {
   background: #2c2c2c;
-  color: #ddd;
 }
 
 /* Form elements */
@@ -55,7 +54,6 @@ button:hover {
   background: #0056b3;
 }
 
-/* “Add Task” fills width */
 #addTaskBtn {
   width: 100%;
   margin-bottom: 20px;
@@ -101,27 +99,31 @@ li {
   padding: 10px;
   border-radius: 4px;
   animation: fadeIn 0.3s ease;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 body.dark li {
   background: #444;
 }
 
-/* Checkbox on the left */
+/* Checkbox at far left */
 li input[type="checkbox"] {
+  flex: 0 0 auto;
   margin-right: 10px;
-  flex-shrink: 0;
 }
 
-/* Task text expands between checkbox and delete */
+/* Task text fills middle */
 li span {
-  flex-grow: 1;
+  flex: 1 1 auto;
+  padding-right: 10px;
   text-align: left;
   word-break: break-word;
 }
 
-/* Delete button on the right */
+/* Delete button pinned to right */
 li button {
+  flex: 0 0 auto;
   margin-left: auto;
   background: transparent;
   border: none;
@@ -135,7 +137,7 @@ li button:hover {
   transform: scale(1.2);
 }
 
-/* Completed style */
+/* Completed task style */
 .completed span {
   text-decoration: line-through;
   color: gray;
@@ -153,12 +155,11 @@ li button:hover {
   }
 }
 
-/* Simple responsive tweaks */
+/* Responsive tweaks (no stacking) */
 @media (max-width: 480px) {
   .container {
     padding: 15px;
   }
-
   button,
   input,
   select {
