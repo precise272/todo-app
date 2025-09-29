@@ -1,4 +1,4 @@
-/* Base layout */
+/* — Base layout — */
 body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
@@ -13,7 +13,7 @@ body.dark {
   color: #ddd;
 }
 
-/* Container */
+/* — Container — */
 .container {
   background: white;
   padding: 20px;
@@ -28,24 +28,25 @@ body.dark .container {
   background: #2c2c2c;
 }
 
-/* Form elements */
-input,
-select {
+/* — Form elements — */
+input, select, button {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  font-size: 14px;
+}
+
+select, input {
   border-radius: 4px;
   border: 1px solid #ccc;
 }
 
 button {
-  padding: 10px;
   background: #007bff;
   color: white;
   border: none;
   cursor: pointer;
-  font-size: 14px;
   border-radius: 4px;
   transition: background 0.3s ease;
 }
@@ -55,13 +56,10 @@ button:hover {
 }
 
 #addTaskBtn {
-  width: 100%;
   margin-bottom: 20px;
 }
 
-/* Dark-mode toggle */
 #toggleDarkMode {
-  margin-bottom: 20px;
   background: #444;
 }
 
@@ -70,7 +68,7 @@ body.dark #toggleDarkMode {
   color: #222;
 }
 
-/* Category headers */
+/* — Category header — */
 .category-header {
   font-weight: bold;
   margin-top: 20px;
@@ -83,14 +81,13 @@ body.dark .category-header {
   color: #ccc;
 }
 
-/* Task list wrapper */
+/* — Task list & rows — */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Each task row */
 li {
   display: flex;
   align-items: center;
@@ -98,8 +95,8 @@ li {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 4px;
-  animation: fadeIn 0.3s ease;
   box-sizing: border-box;
+  animation: fadeIn 0.3s ease;
   width: 100%;
 }
 
@@ -107,22 +104,36 @@ body.dark li {
   background: #444;
 }
 
-/* Checkbox at far left */
+/* Checkbox always at left */
 li input[type="checkbox"] {
   flex: 0 0 auto;
   margin-right: 10px;
 }
 
-/* Task text fills middle */
-li span {
+/* Text + category grouped in the middle */
+.task-detail {
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
-  padding-right: 10px;
+  overflow: hidden;
+}
+
+.task-detail span {
+  flex: 1 1 auto;
   text-align: left;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-detail small {
+  margin-left: 8px;
+  white-space: nowrap;
+  color: #555;
 }
 
 /* Delete button pinned to right */
-li button {
+.delete-btn {
   flex: 0 0 auto;
   margin-left: auto;
   background: transparent;
@@ -133,11 +144,11 @@ li button {
   transition: transform 0.2s ease;
 }
 
-li button:hover {
+.delete-btn:hover {
   transform: scale(1.2);
 }
 
-/* Completed task style */
+/* Completed styling */
 .completed span {
   text-decoration: line-through;
   color: gray;
@@ -155,14 +166,12 @@ li button:hover {
   }
 }
 
-/* Responsive tweaks (no stacking) */
+/* — Simple responsive tweaks — */
 @media (max-width: 480px) {
   .container {
     padding: 15px;
   }
-  button,
-  input,
-  select {
+  input, select, button {
     font-size: 16px;
   }
 }
