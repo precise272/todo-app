@@ -75,7 +75,6 @@ function renderTasks(tasks) {
 // Toggle expanded class on the text span only
 span.addEventListener("click", e => {
   span.classList.toggle("expanded");
-  // Prevent this click from also bubbling up (optional)
   e.stopPropagation();
 });
       const small = document.createElement("small");
