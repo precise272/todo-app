@@ -85,14 +85,15 @@ span.addEventListener("click", e => {
       detail.appendChild(small);
 
       // delete button
-  const del = document.createElement("button");
-del.className = "delete-btn";
-del.textContent = "❌";
-del.addEventListener("click", () => {
-  const updated = tasks.filter(t => t.id !== task.id);
-  saveAndRerender(updated);
-});
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "❌";
+      del.addEventListener("click", () => {
+        const updated = tasks.filter(t => t.id !== task.id);
+saveAndRerender(updated);
 
+        saveAndRerender(tasks);
+      });
 
       if (task.completed) li.classList.add("completed");
 
