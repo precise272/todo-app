@@ -29,35 +29,13 @@ body.dark .container {
 }
 
 /* — Form elements — */
-/* only make text inputs and selects full-width */
-input[type="text"],
-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-/* Full-width “Add Task” and toggle buttons */
-#addTaskBtn,
-#toggleDarkMode {
-  width: 100%;
+input, select, button {
+  /* width: 100%; */
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
   font-size: 14px;
 }
-
-/* Leave checkboxes at auto width */
-li input[type="checkbox"] {
-  width: auto;
-  flex: 0 0 auto;
-  margin-right: 10px;
-}
-
 
 select, input {
   border-radius: 4px;
