@@ -4,89 +4,97 @@ const categorySelect = document.getElementById("categorySelect");
 const taskGroups = document.getElementById("taskGroups");
 
 // Load tasks on page load
-window.onload = () => {
-  const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  renderTasks(savedTasks);
-};
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = JSON.parse(localStorage.getItem("tasks")) || [];
+  renderTasks(saved);
+});
 
 // Add new task
 addTaskBtn.addEventListener("click", () => {
-  const taskText = taskInput.value.trim();
+  const text = taskInput.value.trim();
   const category = categorySelect.value;
-  if (taskText === "") return;
+  if (!text) return;
 
-  const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  savedTasks.push({ text: taskText, completed: false, category });
-  localStorage.setItem("tasks", JSON.stringify(savedTasks));
-  renderTasks(savedTasks);
+  const all = JSON.parse(localStorage.getItem("tasks")) || [];
+  all.push({ text, completed: false, category });
+  localStorage.setItem("tasks", JSON.stringify(all));
+  renderTasks(all);
 
   taskInput.value = "";
 });
 
-// Toggle dark mode
-document.getElementById("toggleDarkMode").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-});
+// Dark mode toggle
+document.getElementById("toggleDarkMode")
+  .addEventListener("click", () => document.body.classList.toggle("dark"));
 
-// Render tasks grouped by category
+// Render and group tasks
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
-  const grouped = tasks.reduce((acc, task) => {
-    const key = task.category || "Uncategorized";
-    acc[key] = acc[key] || [];
-    acc[key].push(task);
+  // Group by category
+  const grouped = tasks.reduce((acc, t) => {
+    const key = t.category || "Uncategorized";
+    (acc[key] = acc[key] || []).push(t);
     return acc;
   }, {});
 
-  Object.keys(grouped).forEach(category => {
+  // Build DOM
+  Object.keys(grouped).forEach(cat => {
     const header = document.createElement("div");
     header.className = "category-header";
-    header.textContent = category;
+    header.textContent = cat;
     taskGroups.appendChild(header);
 
     const ul = document.createElement("ul");
 
-    grouped[category].forEach(task => {
+    grouped[cat].forEach((task, i) => {
       const li = document.createElement("li");
 
-      // Checkbox
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = task.completed;
-      checkbox.addEventListener("change", () => {
-        task.completed = checkbox.checked;
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        renderTasks(tasks);
+      // checkbox
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = task.completed;
+      cb.addEventListener("change", () => {
+        task.completed = cb.checked;
+        saveAndRerender(tasks);
       });
 
-      // Task content wrapper
-      const taskContent = document.createElement("div");
-      taskContent.className = "task-content";
+      // middle detail wrapper
+      const detail = document.createElement("div");
+      detail.className = "task-detail";
 
       const span = document.createElement("span");
       span.textContent = task.text;
 
-      taskContent.appendChild(span);
+      const small = document.createElement("small");
+      if (task.category) small.textContent = task.category;
 
-      // Delete button
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "❌";
-      deleteBtn.addEventListener("click", () => {
-        const index = tasks.indexOf(task);
-        tasks.splice(index, 1);
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        renderTasks(tasks);
+      detail.appendChild(span);
+      detail.appendChild(small);
+
+      // delete button
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "❌";
+      del.addEventListener("click", () => {
+        tasks.splice(i, 1);
+        saveAndRerender(tasks);
       });
 
       if (task.completed) li.classList.add("completed");
 
-      li.appendChild(checkbox);
-      li.appendChild(taskContent);
-      li.appendChild(deleteBtn);
+      li.appendChild(cb);
+      li.appendChild(detail);
+      li.appendChild(del);
       ul.appendChild(li);
     });
 
     taskGroups.appendChild(ul);
   });
+}
+
+// helper to persist & redraw
+function saveAndRerender(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  renderTasks(tasks);
 }
