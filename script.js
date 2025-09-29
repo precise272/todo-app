@@ -75,6 +75,7 @@ function renderTasks(tasks) {
 // Toggle expanded class on the text span only
 span.addEventListener("click", e => {
   span.classList.toggle("expanded");
+  // Prevent this click from also bubbling up (optional)
   e.stopPropagation();
 });
       const small = document.createElement("small");
@@ -84,14 +85,13 @@ span.addEventListener("click", e => {
       detail.appendChild(small);
 
       // delete button
-  const del = document.createElement("button");
-del.className = "delete-btn";
-del.textContent = "❌";
-del.addEventListener("click", () => {
-  const updated = tasks.filter(t => t.id !== task.id);
-  saveAndRerender(updated);
-});
-
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "❌";
+      del.addEventListener("click", () => {
+        tasks.splice(i, 1);
+        saveAndRerender(tasks);
+      });
 
       if (task.completed) li.classList.add("completed");
 
