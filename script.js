@@ -236,16 +236,15 @@ function renderTasks(tasks) {
         detail.appendChild(reminderTag);
       }
 
-      // Delete button
-      const del = document.createElement("button");
-      del.className = "delete-btn";
-      del.textContent = "❌";
-      del.addEventListener("click", () => {
-        console.log("Deleting task:", task.id, task.text);
+// Delete button
+const del = document.createElement("button");
+del.className = "delete-btn";
+del.textContent = "❌";
+del.addEventListener("click", () => {
+  console.log("Deleting task:", task.id, task.text);
   const updated = tasks.filter(t => t.id !== task.id);
   saveAndRender(updated);
 });
-
 
       if (task.completed) li.classList.add("completed");
 
