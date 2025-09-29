@@ -1,3 +1,4 @@
+/* — Base layout — */
 body {
   font-family: Arial, sans-serif;
   background: #f4f4f4;
@@ -12,6 +13,7 @@ body.dark {
   color: #ddd;
 }
 
+/* — Container — */
 .container {
   background: white;
   padding: 20px;
@@ -27,10 +29,9 @@ body.dark .container {
   color: #ddd;
 }
 
+/* — Form elements — */
 input[type="text"],
-input[type="datetime-local"],
-select,
-button {
+select {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -40,20 +41,28 @@ button {
   border: 1px solid #ccc;
 }
 
-button {
+#addTaskBtn,
+#toggleDarkMode {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
   background: #007bff;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-button:hover {
-  background: #0056b3;
-}
-
 #toggleDarkMode {
   background: #444;
+}
+
+#addTaskBtn:hover,
+#toggleDarkMode:hover {
+  background: #0056b3;
 }
 
 body.dark #toggleDarkMode {
@@ -61,6 +70,7 @@ body.dark #toggleDarkMode {
   color: #222;
 }
 
+/* — Category header — */
 .category-header {
   font-weight: bold;
   margin-top: 20px;
@@ -73,6 +83,7 @@ body.dark .category-header {
   color: #ccc;
 }
 
+/* — Task list & rows — */
 ul {
   list-style: none;
   padding: 0;
@@ -86,6 +97,7 @@ li {
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 4px;
+  box-sizing: border-box;
   animation: fadeIn 0.3s ease;
   width: 100%;
 }
@@ -94,48 +106,47 @@ body.dark li {
   background: #444;
 }
 
+/* Checkbox stays at its own size */
 li input[type="checkbox"] {
   flex: 0 0 auto;
   margin-right: 10px;
+  width: auto;
 }
 
+/* Middle wrapper: NO overflow hidden here */
 .task-detail {
   display: flex;
   align-items: center;
   flex: 1 1 auto;
-  min-width: 0;
-  width: 100%; /* 👈 This ensures it fills the available space */
-  overflow: visible;
+  /* REMOVED overflow: hidden; */
 }
 
+/* Default: truncate with ellipsis */
 .task-detail span {
-  display: block; /* 👈 Prevents inline collapse */
   flex: 1 1 auto;
-  width: 100%;    /* 👈 Ensures it fills the container */
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
+  cursor: pointer;              /* show it’s clickable */
   transition: all 0.2s ease;
 }
 
+/* Expanded: multiline, full text */
 .task-detail span.expanded {
-  white-space: normal;
+  white-space: normal;          /* wrap lines */
   word-break: break-word;
-  overflow: visible;
+  overflow: visible;            /* show the full content */
 }
 
+/* Optional category tag */
 .task-detail small {
   margin-left: 8px;
-  font-size: 12px;
+  white-space: nowrap;
   color: #555;
 }
 
-.task-detail small:last-child {
-  margin-left: auto;
-  color: #888;
-}
-
+/* Delete button pinned at right */
 .delete-btn {
   flex: 0 0 auto;
   margin-left: auto;
@@ -151,19 +162,13 @@ li input[type="checkbox"] {
   transform: scale(1.2);
 }
 
+/* Completed task style */
 .completed span {
   text-decoration: line-through;
   color: gray;
 }
 
-.edit-input {
-  flex: 1 1 auto;
-  padding: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
+/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -175,11 +180,15 @@ li input[type="checkbox"] {
   }
 }
 
+/* — Responsive tweaks — */
 @media (max-width: 480px) {
   .container {
     padding: 15px;
   }
-  input, select, button {
+  input[type="text"],
+  select,
+  #addTaskBtn,
+  #toggleDarkMode {
     font-size: 16px;
   }
 }
