@@ -132,13 +132,21 @@ li input[type="checkbox"] {
   margin-right: 10px;
 }
 
-/* Text + category grouped in the middle */
-.task-detail {
-  display: flex;
-  align-items: center;
+.task-detail span {
   flex: 1 1 auto;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;            /* show it’s clickable */
+  transition: all 0.2s ease;
 }
+
+.task-detail span.expanded {
+  white-space: normal;        /* wrap lines */
+  word-break: break-word;
+  overflow: visible;
+}
+
 
 .task-detail span {
   flex: 1 1 auto;
@@ -197,3 +205,4 @@ li input[type="checkbox"] {
     font-size: 16px;
   }
 }
+
