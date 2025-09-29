@@ -16,18 +16,12 @@ addTaskBtn.addEventListener("click", () => {
   if (!text) return;
 
   const all = JSON.parse(localStorage.getItem("tasks")) || [];
-  all.push({
-    id: Date.now(), // ✅ Unique ID
-    text,
-    completed: false,
-    category
-  });
-
+  all.push({ text, completed: false, category });
   localStorage.setItem("tasks", JSON.stringify(all));
   renderTasks(all);
+
   taskInput.value = "";
 });
-
 
 // Dark mode toggle
 document.getElementById("toggleDarkMode")
@@ -78,6 +72,8 @@ span.addEventListener("click", e => {
   // Prevent this click from also bubbling up (optional)
   e.stopPropagation();
 });
+
+
       const small = document.createElement("small");
       if (task.category) small.textContent = task.category;
 
@@ -85,14 +81,13 @@ span.addEventListener("click", e => {
       detail.appendChild(small);
 
       // delete button
-  const del = document.createElement("button");
-del.className = "delete-btn";
-del.textContent = "❌";
-del.addEventListener("click", () => {
-  const updated = tasks.filter(t => t.id !== task.id);
-  saveAndRerender(updated);
-});
-
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "❌";
+      del.addEventListener("click", () => {
+        tasks.splice(i, 1);
+        saveAndRerender(tasks);
+      });
 
       if (task.completed) li.classList.add("completed");
 
