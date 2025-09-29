@@ -89,9 +89,7 @@ span.addEventListener("click", e => {
       del.className = "delete-btn";
       del.textContent = "❌";
       del.addEventListener("click", () => {
-        const updated = tasks.filter(t => t.id !== task.id);
-saveAndRerender(updated);
-
+        tasks.splice(i, 1);
         saveAndRerender(tasks);
       });
 
