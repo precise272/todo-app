@@ -96,22 +96,36 @@ li {
   padding: 10px;
   border-radius: 4px;
   animation: fadeIn 0.3s ease;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 body.dark li {
   background: #444;
 }
 
+/* Checkbox */
 li input[type="checkbox"] {
   margin-right: 10px;
   flex-shrink: 0;
 }
 
-li span {
+/* Task content wrapper */
+.task-content {
+  display: flex;
+  align-items: center;
   flex-grow: 1;
-  text-align: left;
+  overflow: hidden;
 }
 
+/* Task text */
+.task-content span {
+  flex-grow: 1;
+  text-align: left;
+  word-break: break-word;
+}
+
+/* Delete button */
 li button {
   background: transparent;
   border: none;
@@ -127,6 +141,7 @@ li button:hover {
   transform: scale(1.2);
 }
 
+/* Completed task style */
 .completed span {
   text-decoration: line-through;
   color: gray;
@@ -157,6 +172,12 @@ li button:hover {
   li {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .task-content {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
   }
 
   li button {
