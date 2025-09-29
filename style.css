@@ -99,31 +99,29 @@ li input[type="checkbox"] {
 
 .task-detail {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   flex: 1 1 auto;
-  overflow: hidden;
   width: 100%;
 }
 
 .task-detail span {
   display: block;
-  flex: 1 1 auto;
-  text-align: left;
-  white-space: nowrap;
+  width: 100%;
+  max-height: 1.2em; /* one line height */
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease;
-  max-height: 1.2em; /* default collapsed height */
- width: 100%;
+  transition: max-height 0.3s ease, white-space 0.3s ease;
 }
 
 .task-detail span.expanded {
+  max-height: none;
   white-space: normal;
   word-break: break-word;
   overflow: visible;
-  max-height: none; /* allow full expansion */
 }
+
 
 .task-detail small {
   margin-left: 8px;
