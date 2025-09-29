@@ -13,6 +13,7 @@ body.dark {
   color: #ddd;
 }
 
+/* Container */
 .container {
   background: white;
   padding: 20px;
@@ -25,10 +26,12 @@ body.dark {
 
 body.dark .container {
   background: #2c2c2c;
+  color: #ddd;
 }
 
 /* Form elements */
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -52,12 +55,13 @@ button:hover {
   background: #0056b3;
 }
 
+/* “Add Task” fills width */
 #addTaskBtn {
   width: 100%;
   margin-bottom: 20px;
 }
 
-/* Dark mode toggle */
+/* Dark-mode toggle */
 #toggleDarkMode {
   margin-bottom: 20px;
   background: #444;
@@ -81,13 +85,14 @@ body.dark .category-header {
   color: #ccc;
 }
 
-/* Task list */
+/* Task list wrapper */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* Each task row */
 li {
   display: flex;
   align-items: center;
@@ -96,44 +101,33 @@ li {
   padding: 10px;
   border-radius: 4px;
   animation: fadeIn 0.3s ease;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 
 body.dark li {
   background: #444;
 }
 
-/* Checkbox */
+/* Checkbox on the left */
 li input[type="checkbox"] {
   margin-right: 10px;
   flex-shrink: 0;
 }
 
-/* Task content wrapper */
-.task-content {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-/* Task text */
-.task-content span {
+/* Task text expands between checkbox and delete */
+li span {
   flex-grow: 1;
   text-align: left;
   word-break: break-word;
 }
 
-/* Delete button */
+/* Delete button on the right */
 li button {
+  margin-left: auto;
   background: transparent;
   border: none;
   font-size: 18px;
   color: #ff4d4d;
   cursor: pointer;
-  margin-left: 10px;
-  flex-shrink: 0;
   transition: transform 0.2s ease;
 }
 
@@ -141,13 +135,13 @@ li button:hover {
   transform: scale(1.2);
 }
 
-/* Completed task style */
+/* Completed style */
 .completed span {
   text-decoration: line-through;
   color: gray;
 }
 
-/* Animations */
+/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -159,29 +153,15 @@ li button:hover {
   }
 }
 
-/* Responsive tweaks */
+/* Simple responsive tweaks */
 @media (max-width: 480px) {
   .container {
     padding: 15px;
   }
 
-  button, input, select {
+  button,
+  input,
+  select {
     font-size: 16px;
-  }
-
-  li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .task-content {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  li button {
-    align-self: flex-end;
-    margin-top: 5px;
   }
 }
