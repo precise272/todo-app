@@ -3,27 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>To-Do List</title>
+  <title>My To-Do List</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
-  <h1>My To-Do List</h1>
+  <div class="container">
+    <h1>My To-Do List</h1>
 
-  <select id="categorySelect">
-    <option value="">No Category</option>
-    <option value="Work">Work</option>
-    <option value="Personal">Personal</option>
-    <option value="Urgent">Urgent</option>
-  </select>
+    <select id="categorySelect">
+      <option value="">No Category</option>
+      <option value="Work">Work</option>
+      <option value="Personal">Personal</option>
+      <option value="Urgent">Urgent</option>
+    </select>
 
-  <input type="text" id="taskInput" placeholder="Add a new task..." />
-  <button id="addTaskBtn">Add Task</button>
-<button id="toggleDarkMode">Toggle Dark Mode</button>
+    <input type="text" id="taskInput" placeholder="Add a new task..." />
+    <input type="datetime-local" id="reminderInput" />
+    <button id="addTaskBtn">Add Task</button>
 
-  <div id="taskGroups"></div>
-</div>
+    <button id="toggleDarkMode">Toggle Dark Mode</button>
+    <button id="undoBtn">Undo</button>
+    <button id="voiceBtn">🎙️ Voice Command</button>
 
+    <input type="text" id="searchInput" placeholder="Search tasks..." />
+
+    <select id="filterCategory">
+      <option value="">All Categories</option>
+      <option value="Work">Work</option>
+      <option value="Personal">Personal</option>
+      <option value="Urgent">Urgent</option>
+    </select>
+
+    <select id="filterStatus">
+      <option value="">All Tasks</option>
+      <option value="completed">Completed</option>
+      <option value="active">Active</option>
+    </select>
+
+    <div id="taskGroups"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
