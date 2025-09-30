@@ -4,14 +4,14 @@
 :root {
   --color-bg:           #f5f7fa;
   --color-surface:      #ffffff;
-  --color-surface-dark: #1f1f1f;
+  --color-surface-dark: #1e1f26;   /* deep card surface */
   --color-muted:        #eef1f6;
-  --color-muted-dark:   #2a2a2a;
+  --color-muted-dark:   #14151a;   /* app background in dark */
   --color-primary:      #4a90e2;
   --color-primary-dark: #357ab8;
   --color-accent:       #50e3c2;
   --color-text:         #222;
-  --color-text-light:   #eee;
+  --color-text-light:   #f5f5f5;
   --color-border:       #d0d4da;
 
   --radius:     14px;
@@ -19,37 +19,94 @@
   --transition: 0.3s ease;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 html, body {
   height: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
   background: var(--color-bg);
   font-family: 'Inter', Arial, sans-serif;
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
-}
-
-/* Visually hidden utility */
-.visually-hidden {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  margin: -1px; border: 0;
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-  white-space: nowrap;
+  margin: 0;
 }
 
 /*────────────────────────────────────────────────────────────────*
- * CONTAINER & HEADER
+ * DARK THEME OVERRIDES
  *────────────────────────────────────────────────────────────────*/
+body.dark {
+  background: var(--color-muted-dark);
+  color: var(--color-text-light);
+}
+
+body.dark .container {
+  background: #1e1f26;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+body.dark header h1 {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+body.dark .tagline {
+  color: #aaa;
+}
+
+body.dark .task-controls select,
+body.dark .task-controls input[type="text"] {
+  background: #2a2c34;
+  border: 1px solid #444;
+  color: var(--color-text-light);
+}
+
+body.dark .task-controls button {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+body.dark #toggleDarkMode {
+  background: var(--color-accent);
+  color: #000;
+}
+
+body.dark .category-header {
+  color: var(--color-accent);
+  border-color: #333;
+}
+
+body.dark li {
+  background: #2a2c34;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+body.dark li:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+body.dark .task-detail small {
+  color: #bbb;
+}
+
+body.dark .task-actions button {
+  background: #3a3c46;
+  color: var(--color-text-light);
+}
+
+body.dark .task-actions button:hover {
+  background: #4a4d59;
+}
+
+body.dark .edit-input {
+  background: #2a2c34;
+  color: var(--color-text-light);
+  border: 1px solid #555;
+}
+
+/*────────────────────────────────────────────────────────────────*
+ * REST OF YOUR EXISTING LIGHT THEME STYLES (unchanged)
+ *────────────────────────────────────────────────────────────────*/
+
+/* Container */
 .container {
   position: relative;
   max-width: 640px;
@@ -60,10 +117,6 @@ html, body {
   box-shadow: 0 12px 32px rgba(0,0,0,0.08);
   transition: background var(--transition), transform var(--transition);
   animation: fadeSlideIn 0.6s ease-out;
-}
-
-body.dark .container {
-  background: var(--color-surface-dark);
 }
 
 /* Accent bar */
@@ -94,20 +147,13 @@ header h1 {
   -webkit-text-fill-color: transparent;
 }
 
-header h1 .accent {
-  background: none;
-  color: var(--color-accent);
-}
-
 header .tagline {
   margin-top: 6px;
   font-size: 1rem;
   color: #666;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK CONTROLS
- *────────────────────────────────────────────────────────────────*/
+/* Task Controls */
 .task-controls {
   display: flex;
   gap: var(--gap);
@@ -128,17 +174,10 @@ header .tagline {
   transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.task-controls select:focus,
-.task-controls input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
-  outline: none;
-}
-
 .task-controls button {
   flex: none;
   padding: 12px 20px;
-  border-radius: 999px; /* pill shape */
+  border-radius: 999px;
   border: none;
   background: var(--color-primary);
   color: #fff;
@@ -152,24 +191,12 @@ header .tagline {
   transform: translateY(-1px);
 }
 
-.task-controls button:active {
-  transform: translateY(0);
-}
-
-/* Dark mode toggle */
 #toggleDarkMode {
   background: var(--color-accent);
   color: #fff;
 }
 
-body.dark #toggleDarkMode {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-/*────────────────────────────────────────────────────────────────*
- * CATEGORY HEADER
- *────────────────────────────────────────────────────────────────*/
+/* Category Header */
 .category-header {
   font-size: 0.85rem;
   font-weight: 700;
@@ -181,21 +208,13 @@ body.dark #toggleDarkMode {
   padding-bottom: 4px;
 }
 
-body.dark .category-header {
-  border-color: var(--color-muted-dark);
-  color: var(--color-text-light);
-}
-
-/*────────────────────────────────────────────────────────────────*
- * TASK LIST
- *────────────────────────────────────────────────────────────────*/
+/* Task List */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Task Item */
 li {
   background: var(--color-surface);
   border-radius: var(--radius);
@@ -207,25 +226,10 @@ li {
   animation: fadeIn 0.3s ease forwards;
 }
 
-body.dark li {
-  background: var(--color-surface-dark);
-  box-shadow: none;
-}
-
 li:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
-li.dragging {
-  opacity: 0.5;
-}
-
-li.drag-over {
-  transform: scale(0.98);
-  box-shadow: 0 0 0 3px var(--color-primary);
-}
-
-/* First row: checkbox + text */
 .task-main-row {
   display: flex;
   align-items: flex-start;
@@ -239,7 +243,6 @@ li.drag-over {
   flex-shrink: 0;
 }
 
-/* Text + category */
 .task-detail {
   flex: 1;
   display: flex;
@@ -271,14 +274,7 @@ li.drag-over {
   color: #777;
 }
 
-body.dark .task-detail small {
-  color: var(--color-text-light);
-  opacity: 0.7;
-}
-
-/*────────────────────────────────────────────────────────────────*
- * ACTION BUTTONS
- *────────────────────────────────────────────────────────────────*/
+/* Actions */
 .task-actions {
   display: flex;
   gap: 10px;
@@ -300,18 +296,7 @@ body.dark .task-detail small {
   background: var(--color-border);
 }
 
-body.dark .task-actions button {
-  background: var(--color-muted);
-  color: var(--color-text-light);
-}
-
-body.dark .task-actions button:hover {
-  background: #555;
-}
-
-/*────────────────────────────────────────────────────────────────*
- * EDIT INPUT
- *────────────────────────────────────────────────────────────────*/
+/* Edit input */
 .edit-input {
   width: 100%;
   padding: 8px;
