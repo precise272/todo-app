@@ -164,26 +164,41 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 }
 
 /*────────────────────────────────────────────────────────────────*
- * DESKTOP TOOLBAR: TWO-ROW GRID
+ * DESKTOP TOOLBAR TASK CONTROLS (updated)
  *────────────────────────────────────────────────────────────────*/
 .task-controls.desktop-only {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-wrap: wrap;       /* allow wrapping onto second row */
+  align-items: center;
   gap: 12px;
   margin-bottom: 28px;
 }
 
-/* First row */
-.task-controls.desktop-only select      { grid-area: 1 / 1; }
-.task-controls.desktop-only input[type="text"] { grid-area: 1 / 2; }
-
-/* Second row */
-.task-controls.desktop-only #addTaskBtn      { grid-area: 2 / 1; }
-.task-controls.desktop-only #toggleDarkMode  { grid-area: 2 / 2; }
-.task-controls.desktop-only button {
-  width: 160px;
+/* Category dropdown fixed width */
+.task-controls.desktop-only select {
+  flex: 0 0 180px;       /* bump to fit "Select Category" */
+  min-width: 180px;
 }
+
+/* Task input grows to fill first row */
+.task-controls.desktop-only input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+/* Add Task button forces a wrap and hugs the right edge */
+.task-controls.desktop-only #addTaskBtn {
+  flex-basis: 100%;      /* push to new line */
+  margin-left: auto;     /* align to right */
+  width: 180px;          /* uniform with dropdown */
+}
+
+/* Toggle Theme sits directly to the right of Add Task */
+.task-controls.desktop-only #toggleDarkMode {
+  margin-left: 12px;     /* small gap between buttons */
+  width: 180px;
+}
+
 
 /*────────────────────────────────────────────────────────────────*
  * CATEGORY HEADER
