@@ -72,7 +72,7 @@ body.dark .task-actions button:hover { background: #4a4d59; }
 body.dark .edit-input { background: #2a2c34; color: var(--color-text-light); border: 1px solid #555; }
 
 /*────────────────────────────────────────────────────────────────*
- * LIGHT THEME STYLES
+ * CONTAINER & HEADER
  *────────────────────────────────────────────────────────────────*/
 .container {
   position: relative;
@@ -106,41 +106,57 @@ header h1 {
 header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 
 /*────────────────────────────────────────────────────────────────*
- * TASK CONTROLS (desktop toolbar)
+ * TASK CONTROLS (shared desktop + footer)
  *────────────────────────────────────────────────────────────────*/
 .task-controls {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 28px;
-  flex-wrap: nowrap; /* keep single row on desktop */
+  flex-wrap: nowrap;
 }
 
-/* Consistent sizing and alignment across fields/buttons */
 .task-controls select,
 .task-controls input[type="text"],
 .task-controls button {
   font-size: 1rem;
-  line-height: 1.2;
-  padding: 10px 14px;
+  height: 44px;
+  padding: 0 14px;
   border-radius: var(--radius);
   box-sizing: border-box;
-  min-height: 44px; /* unify heights without hardcoding */
 }
 
-/* Inputs/select styling */
-.task-controls select,
-.task-controls input[type="text"] {
-  background: var(--color-surface);
+.task-controls select {
+  flex: 0 0 160px;
   border: 1px solid var(--color-border);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  background: var(--color-surface);
 }
 
-/* Layout: select fixed, input flexible, buttons natural */
-.task-controls select { flex: 0 0 160px; }
-.task-controls input[type="text"] { flex: 1 1 auto; min-width: 200px; }
-.task-controls button { flex: 0 0 auto; border: none; background: var(--color-primary); color: #fff; font-weight: 600; cursor: pointer; transition: background var(--transition), transform 0.2s ease; border-radius: 999px; }
-.task-controls button:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+.task-controls input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 200px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.task-controls button {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0 20px;
+  transition: background var(--transition), transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.task-controls button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
 #toggleDarkMode { background: var(--color-accent); color: #fff; }
 
 /*────────────────────────────────────────────────────────────────*
@@ -204,14 +220,17 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 }
 .edit-input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+  box-shadow:   0 0 0 2px rgba(74,144,226,0.2);
   outline: none;
 }
 
 /*────────────────────────────────────────────────────────────────*
  * COMPLETED TASK
  *────────────────────────────────────────────────────────────────*/
-.completed .task-detail span { color: #999; text-decoration: line-through; }
+.completed .task-detail span {
+  color: #999;
+  text-decoration: line-through;
+}
 
 /*────────────────────────────────────────────────────────────────*
  * STICKY FOOTER (desktop + mobile)
@@ -281,6 +300,11 @@ body.dark .task-footer {
   .desktop-only { display: none; }
   .task-footer { display: block; }
 
+  .task-footer .task-controls {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .task-footer select,
   .task-footer input[type="text"],
   .task-footer button {
@@ -312,58 +336,4 @@ body.dark .task-footer {
   outline: 2px solid var(--color-accent);
   box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
   transition: outline 0.3s ease, box-shadow 0.3s ease;
-}
-/*────────────────────────────────────────────────────────────────*
- * DESKTOP TOOLBAR ALIGNMENT FIX
- *────────────────────────────────────────────────────────────────*/
-.task-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
-  flex-wrap: nowrap; /* keep in one row on desktop */
-}
-
-/* Inputs and select: consistent height and padding */
-.task-controls select,
-.task-controls input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 180px;
-  height: 44px;
-  font-size: 1rem;
-  padding: 0 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-/* Category select narrower, input grows */
-.task-controls select {
-  flex: 0 0 160px;
-}
-
-/* Buttons: consistent height, pill shape */
-.task-controls button {
-  flex: 0 0 auto;
-  height: 44px;
-  padding: 0 20px;
-  border-radius: 999px;
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background var(--transition), transform 0.2s ease;
-  white-space: nowrap;
-}
-
-.task-controls button:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-}
-
-#toggleDarkMode {
-  background: var(--color-accent);
-  color: #fff;
 }
