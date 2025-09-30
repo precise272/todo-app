@@ -110,18 +110,21 @@ li input[type="checkbox"] {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 100%;         /* 👈 prevents overflow */
+  overflow: hidden;        /* 👈 clips child span */
+  box-sizing: border-box;  /* 👈 respects padding */
 }
 
 .task-detail span {
   display: block;
   width: 100%;
+  max-width: 100%;         /* 👈 prevents overflow */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
   padding-right: 12px;
-  box-sizing: border-box; /* 👈 ensures padding doesn't break layout */
-  max-width: 100%;         /* 👈 prevents overflow beyond container */
+  box-sizing: border-box;
 }
 
 .task-detail span.expanded {
