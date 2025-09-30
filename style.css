@@ -1,103 +1,109 @@
-/* Prevent horizontal overflow on all devices */
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
+:root {
+  --bg-page: #f9f9fb;
+  --bg-container: #ffffff;
+  --bg-container-dark: #2c2c2c;
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-light: #eee;
+  --primary: #4a90e2;
+  --primary-dark: #357ab8;
+  --muted: #f0f0f0;
+  --muted-dark: #444444;
+  --radius: 12px;
+  --gap: 12px;
+  --transition: 0.3s ease;
 }
 
-/* — Base Layout — */
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+  background: var(--bg-page);
   font-family: 'Inter', Arial, sans-serif;
-  background: #f9f9fb;
-  display: flex;
-  justify-content: center;
-  padding: 50px;
-  transition: background 0.3s ease;
+  color: var(--text-primary);
 }
 
 body.dark {
-  background: #1e1e1e;
-  color: #ddd;
+  background: #121212;
+  color: var(--text-light);
 }
 
-/* — App Container — */
 .container {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
+  position: relative;
   max-width: 600px;
-  margin: 32px 16px;
+  margin: 32px auto;
   padding: 32px;
-  transition: background 0.3s ease, transform 0.3s ease;
-  animation: fadeSlideIn 0.6s ease-out;
+  background: var(--bg-container);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: background var(--transition), transform var(--transition);
+  animation: fadeSlideIn var(--transition) var(--transition) ease-out;
 }
 
 body.dark .container {
-  background: #2c2c2c;
+  background: var(--bg-container-dark);
 }
 
-/* — App Title — */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: var(--primary);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
 .container h1 {
+  margin: 0 0 24px;
   font-size: 1.75rem;
-  margin-bottom: 24px;
   text-align: center;
-  color: #333;
+  font-weight: 700;
 }
 
-body.dark .container h1 {
-  color: #eee;
+form {
+  display: flex;
+  gap: var(--gap);
 }
 
-/* — Form Elements — */
-input[type="text"],
-select,
-button {
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 1rem;
-  margin-bottom: 16px;
-  padding: 12px;
-  width: 100%;
+input[type="text"], select {
+  flex: 1;
+}
+
+button, input[type="text"], select {
+  padding: 12px 16px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--radius);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-input[type="text"]:focus,
-select:focus {
-  border-color: #4a90e2;
+input[type="text"]:focus, select:focus {
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(74,144,226,0.2);
   outline: none;
 }
 
-/* — Select arrow (black) — */
 select {
   appearance: none;
-  background-color: white;
-  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L0 0h12L6 8z' fill='%23000'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  padding-right: 40px;
+  background: var(--bg-container) url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L0 0h12L6 8z' fill='%23000'/%3E%3C/svg%3E") no-repeat right 16px center;
+  background-size: 12px 8px;
 }
 
-body.dark select {
-  background-color: #3a3a3a;
-  border-color: #555;
-  color: #ddd;
-}
-
-/* — Primary Button — */
 button {
-  background: #4a90e2;
-  color: white;
+  position: relative;
+  overflow: hidden;
+  background: var(--primary);
+  color: #fff;
   font-weight: 600;
+  border: none;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background var(--transition), transform 0.2s ease;
 }
 
 button:hover {
-  background: #357ab8;
+  background: var(--primary-dark);
   transform: translateY(-1px);
 }
 
@@ -105,54 +111,42 @@ button:active {
   transform: translateY(0);
 }
 
-/* — Dark Mode Toggle — */
-#toggleDarkMode {
-  background: #444;
-}
-
-body.dark #toggleDarkMode {
-  background: #ddd;
-  color: #222;
-}
-
-/* — Category Header — */
 .category-header {
-  color: #4a4a4a;
+  margin: 32px 0 12px;
   font-size: 1rem;
   font-weight: 700;
-  margin: 32px 0 12px;
-  padding-bottom: 4px;
   border-bottom: 2px solid #e0e0e0;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  padding-bottom: 4px;
+  transition: border-color var(--transition), color var(--transition);
 }
 
 body.dark .category-header {
-  color: #aaa;
   border-color: #444;
+  color: var(--text-light);
 }
 
-/* — Task List — */
 ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-/* — Task Item — */
 li {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--bg-container);
+  border-radius: var(--radius);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeIn 0.4s var(--transition) ease forwards;
   opacity: 0;
-  padding: 16px;
-  transition:
-    background 0.3s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-  animation: fadeIn 0.4s ease forwards;
+}
+
+body.dark li {
+  background: var(--bg-container-dark);
+  box-shadow: none;
 }
 
 li:hover {
@@ -164,40 +158,45 @@ li.dragging {
 }
 
 li.drag-over {
+  box-shadow: 0 0 0 3px var(--primary) !important;
   transform: scale(0.98);
-  box-shadow: 0 0 0 3px #4a90e2;
 }
 
-/* — First Row: Checkbox + Text Block — */
+/* First row: checkbox + text */
 .task-main-row {
-  align-items: flex-start;
   display: flex;
-  gap: 12px;
+  align-items: flex-start;
+  gap: var(--gap);
 }
 
 .task-main-row input[type="checkbox"] {
-  flex-shrink: 0;
   margin-top: 4px;
-  width: 20px;
-  height: 20px;
+  width: 20px; height: 20px;
+  flex-shrink: 0;
 }
 
-/* — Text + Category Stack — */
+/* Text + category */
 .task-detail {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
   overflow: hidden;
+  transition: max-height var(--transition);
+  max-height: 2.6em; /* one line + small gap */
+}
+
+.task-detail.expanded {
+  max-height: 10em;
 }
 
 .task-detail span {
   font-size: 1rem;
   line-height: 1.4;
   margin-bottom: 6px;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: all 0.3s ease;
+  overflow: hidden;
+  transition: color var(--transition);
 }
 
 .task-detail.expanded span {
@@ -205,13 +204,12 @@ li.drag-over {
 }
 
 .task-detail small {
-  color: #888;
-  display: block;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   margin-top: auto;
 }
 
-/* — Second Row: Action Buttons — */
+/* Second row: action buttons */
 .task-actions {
   display: flex;
   gap: 10px;
@@ -220,11 +218,11 @@ li.drag-over {
 }
 
 .task-actions button {
-  background: #f0f0f0;
-  border-radius: 6px;
+  background: var(--muted);
+  color: var(--text-primary);
   font-size: 1.1rem;
   padding: 8px 12px;
-  transition: background 0.2s ease;
+  border-radius: var(--radius);
 }
 
 .task-actions button:hover {
@@ -232,80 +230,65 @@ li.drag-over {
 }
 
 body.dark .task-actions button {
-  background: #333;
-  color: #eee;
+  background: var(--muted-dark);
+  color: var(--text-light);
 }
 
 body.dark .task-actions button:hover {
-  background: #444;
+  background: #555;
 }
 
-/* — Edit Input — */
+/* Ripple effect */
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  animation: ripple 600ms linear;
+  pointer-events: none;
+}
+
+/* Input edit */
 .edit-input {
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  font-size: 1rem;
-  padding: 8px;
   width: 100%;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid #bbb;
+  transition: border var(--transition), box-shadow var(--transition);
 }
 
 .edit-input:focus {
-  border-color: #4a90e2;
+  border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
   outline: none;
 }
 
-/* — Completed Task — */
+/* Completed */
 .completed .task-detail span {
   color: #999;
   text-decoration: line-through;
 }
 
-/* — Animations — */
+/* Animations */
 @keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* — Responsive Design — */
+/* Responsive */
 @media (max-width: 480px) {
-  body {
-    padding: 16px;
-  }
-
   .container {
     margin: 0;
-    max-width: 100%;
     padding: 16px;
+    border-radius: 0;
+    box-shadow: none;
   }
-
   .category-header {
     font-size: 0.95rem;
     margin: 24px 0 8px;
   }
-
-  .task-detail span {
-    font-size: 0.95rem;
-  }
-
-  .task-actions {
-    gap: 6px;
-  }
-
   .task-actions button {
     font-size: 1rem;
     padding: 6px 8px;
