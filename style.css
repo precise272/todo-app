@@ -1,21 +1,16 @@
-/*────────────────────────────────────────────────────────────────*
- * VARIABLES & GLOBAL RESET
- *────────────────────────────────────────────────────────────────*/
 :root {
-  /* Palette */
   --color-bg:           #f0f2f5;
   --color-surface:      #ffffff;
   --color-surface-dark: #1f1f1f;
-  --color-muted:        #e9ebf0;    /* Container background */
-  --color-muted-dark:   #2a2a2a;    /* Dark container */
+  --color-muted:        #e3e6ec;
+  --color-muted-dark:   #2a2a2a;
   --color-primary:      #4a90e2;
   --color-primary-dark: #357ab8;
   --color-accent:       #50e3c2;
-  --color-text:         #333333;
-  --color-text-light:   #eeeeee;
+  --color-text:         #222;
+  --color-text-light:   #eee;
   --color-border:       #d0d4da;
 
-  /* Sizing */
   --radius:     14px;
   --gap:        16px;
   --transition: 0.3s ease;
@@ -39,9 +34,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * VISUALLY HIDDEN UTILITY
- *────────────────────────────────────────────────────────────────*/
+/* Visually hidden utility */
 .visually-hidden {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -51,9 +44,7 @@ html, body {
   white-space: nowrap;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * CONTAINER & HEADER
- *────────────────────────────────────────────────────────────────*/
+/* Container */
 .container {
   position: relative;
   max-width: 600px;
@@ -63,14 +54,14 @@ html, body {
   border-radius: var(--radius);
   box-shadow: 0 12px 32px rgba(0,0,0,0.08);
   transition: background var(--transition), transform var(--transition);
-  animation: fadeSlideIn var(--transition) ease-out;
+  animation: fadeSlideIn 0.6s ease-out;
 }
 
 body.dark .container {
   background: var(--color-muted-dark);
 }
 
-/* Top accent bar */
+/* Accent bar */
 .container::before {
   content: '';
   position: absolute;
@@ -81,7 +72,7 @@ body.dark .container {
   border-top-right-radius: var(--radius);
 }
 
-/* Logo/Header */
+/* Header */
 header {
   text-align: center;
   margin-bottom: 32px;
@@ -110,9 +101,7 @@ header .tagline {
   opacity: 0.8;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK CONTROLS (SELECT, INPUT, BUTTONS)
- *────────────────────────────────────────────────────────────────*/
+/* Task Controls */
 .task-controls {
   display: flex;
   gap: var(--gap);
@@ -150,8 +139,6 @@ header .tagline {
   font-weight: 600;
   cursor: pointer;
   transition: background var(--transition), transform 0.2s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .task-controls button:hover {
@@ -163,7 +150,7 @@ header .tagline {
   transform: translateY(0);
 }
 
-/* Dark mode pill */
+/* Dark mode toggle */
 #toggleDarkMode {
   background: var(--color-muted);
   color: var(--color-text);
@@ -174,9 +161,7 @@ body.dark #toggleDarkMode {
   color: #fff;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * CATEGORY HEADERS
- *────────────────────────────────────────────────────────────────*/
+/* Category Header */
 .category-header {
   font-size: 0.95rem;
   font-weight: 700;
@@ -184,7 +169,6 @@ body.dark #toggleDarkMode {
   margin: 32px 0 12px;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--color-border);
-  transition: border-color var(--transition), color var(--transition);
 }
 
 body.dark .category-header {
@@ -192,23 +176,23 @@ body.dark .category-header {
   color: var(--color-text-light);
 }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK ITEMS
- *────────────────────────────────────────────────────────────────*/
+/* Task List */
 ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
+/* Task Item */
 li {
   background: var(--color-surface);
   border-radius: var(--radius);
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   margin-bottom: 16px;
   padding: 16px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: box-shadow var(--transition), transform var(--transition);
-  animation: fadeIn 0.4s var(--transition) ease forwards;
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeIn 0.3s ease forwards;
 }
 
 body.dark li {
@@ -229,7 +213,7 @@ li.drag-over {
   box-shadow: 0 0 0 3px var(--color-primary);
 }
 
-/* First row: checkbox & text */
+/* First row: checkbox + text */
 .task-main-row {
   display: flex;
   align-items: flex-start;
@@ -243,7 +227,7 @@ li.drag-over {
   flex-shrink: 0;
 }
 
-/* Text + category stack */
+/* Text + category */
 .task-detail {
   flex: 1;
   display: flex;
@@ -273,11 +257,16 @@ li.drag-over {
 .task-detail small {
   margin-top: auto;
   font-size: 0.85rem;
+  color: var(--color-text);
+  opacity: 0.6;
+}
+
+body.dark .task-detail small {
   color: var(--color-text-light);
   opacity: 0.7;
 }
 
-/* Second row: action buttons */
+/* Action buttons */
 .task-actions {
   display: flex;
   gap: 12px;
@@ -307,7 +296,7 @@ body.dark .task-actions button:hover {
   background: #555;
 }
 
-/* Edit input style */
+/* Edit input */
 .edit-input {
   width: 100%;
   padding: 8px;
@@ -322,49 +311,12 @@ body.dark .task-actions button:hover {
   outline: none;
 }
 
-/* Completed styling */
+/* Completed task */
 .completed .task-detail span {
   color: #999;
   text-decoration: line-through;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * ANIMATIONS
- *────────────────────────────────────────────────────────────────*/
+/* Animations */
 @keyframes fadeIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/*────────────────────────────────────────────────────────────────*
- * RESPONSIVE
- *────────────────────────────────────────────────────────────────*/
-@media (max-width: 480px) {
-  body {
-    padding: 16px;
-  }
-
-  .container {
-    margin: 0;
-    padding: 24px;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .task-controls {
-    flex-direction: column;
-  }
-
-  header h1 {
-    font-size: 2rem;
-  }
-
-  .category-header {
-    margin: 24px 0 8px;
-    font-size: 0.9rem;
-  }
-}
+  from {
