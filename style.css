@@ -1,6 +1,6 @@
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * VARIABLES & GLOBAL RESET
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 :root {
   --color-bg:           #f5f7fa;
   --color-surface:      #ffffff;
@@ -38,12 +38,12 @@ html, body {
 body::after {
   content: "";
   display: block;
-  height: 60px;
+  height: 60px; /* space for sticky footer */
 }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * DARK THEME
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 body.dark {
   background: linear-gradient(180deg, #14151a 0%, #1e1f26 100%);
   color: var(--color-text-light);
@@ -71,9 +71,9 @@ body.dark .task-actions button { background: #3a3c46; color: var(--color-text-li
 body.dark .task-actions button:hover { background: #4a4d59; }
 body.dark .edit-input { background: #2a2c34; color: var(--color-text-light); border: 1px solid #555; }
 
-/*───────────────────────────────────────────────────────────────*
- * LIGHT THEME LAYOUT
- *───────────────────────────────────────────────────────────────*/
+/*────────────────────────────────────────────────────────────────*
+ * LIGHT THEME STYLES
+ *────────────────────────────────────────────────────────────────*/
 .container {
   position: relative;
   max-width: 640px;
@@ -105,58 +105,47 @@ header h1 {
 }
 header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 
-/*───────────────────────────────────────────────────────────────*
- * DESKTOP TASK CONTROLS
- *───────────────────────────────────────────────────────────────*/
-.task-controls.desktop-only {
+/*────────────────────────────────────────────────────────────────*
+ * TASK CONTROLS (desktop toolbar)
+ *────────────────────────────────────────────────────────────────*/
+.task-controls {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 28px;
+  flex-wrap: nowrap; /* keep single row on desktop */
 }
 
-.task-controls.desktop-only select,
-.task-controls.desktop-only input[type="text"],
-.task-controls.desktop-only button {
-  height: 44px;
+/* Consistent sizing and alignment across fields/buttons */
+.task-controls select,
+.task-controls input[type="text"],
+.task-controls button {
   font-size: 1rem;
   line-height: 1.2;
-  padding: 0 14px;
+  padding: 10px 14px;
   border-radius: var(--radius);
   box-sizing: border-box;
+  min-height: 44px; /* unify heights without hardcoding */
 }
 
-.task-controls.desktop-only select {
-  flex: 0 0 160px;
+/* Inputs/select styling */
+.task-controls select,
+.task-controls input[type="text"] {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.task-controls.desktop-only input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 200px;
-}
-
-.task-controls.desktop-only button {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background var(--transition), transform 0.2s ease;
-  border-radius: 999px;
-}
-
-.task-controls.desktop-only button:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-}
-
+/* Layout: select fixed, input flexible, buttons natural */
+.task-controls select { flex: 0 0 160px; }
+.task-controls input[type="text"] { flex: 1 1 auto; min-width: 200px; }
+.task-controls button { flex: 0 0 auto; border: none; background: var(--color-primary); color: #fff; font-weight: 600; cursor: pointer; transition: background var(--transition), transform 0.2s ease; border-radius: 999px; }
+.task-controls button:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
 #toggleDarkMode { background: var(--color-accent); color: #fff; }
 
-/*───────────────────────────────────────────────────────────────*
- * CATEGORY HEADERS
- *───────────────────────────────────────────────────────────────*/
+/*────────────────────────────────────────────────────────────────*
+ * CATEGORY HEADER
+ *────────────────────────────────────────────────────────────────*/
 .category-header {
   font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1px; color: var(--color-primary-dark);
@@ -164,12 +153,13 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
   padding-bottom: 4px;
 }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * TASK LIST
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 ul { list-style: none; padding: 0; margin: 0; }
 li {
-  background: var(--color-surface); border-radius: var(--radius);
+  background: var(--color-surface);
+  border-radius: var(--radius);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   margin-bottom: 14px; padding: 16px;
   opacity: 1; transform: translateY(0);
@@ -193,12 +183,10 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 .task-detail.expanded span { white-space: normal; }
 .task-detail small { font-size: 0.8rem; color: #777; }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * TASK ACTIONS
- *───────────────────────────────────────────────────────────────*/
-.task-actions {
-  display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;
-}
+ *────────────────────────────────────────────────────────────────*/
+.task-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
 .task-actions button {
   background: var(--color-muted); border: none; border-radius: 8px;
   padding: 6px 10px; font-size: 1rem; cursor: pointer;
@@ -206,9 +194,9 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 }
 .task-actions button:hover { background: var(--color-border); }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * EDIT INPUT
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 .edit-input {
   width: 100%; padding: 8px; border-radius: var(--radius);
   border: 1px solid #888;
@@ -216,23 +204,20 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 }
 .edit-input:focus {
   border-color: var(--color-primary);
-  box-shadow:   0 0 0 2px rgba(74,144,226,0.2);
+  box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
   outline: none;
 }
 
-/*───────────────────────────────────────────────────────────────*
- * COMPLETED TASKS
- *───────────────────────────────────────────────────────────────*/
-.completed .task-detail span {
-  color: #999;
-  text-decoration: line-through;
-}
+/*────────────────────────────────────────────────────────────────*
+ * COMPLETED TASK
+ *────────────────────────────────────────────────────────────────*/
+.completed .task-detail span { color: #999; text-decoration: line-through; }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * STICKY FOOTER (desktop + mobile)
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 .task-footer {
-  display: none; /* hidden by default, revealed by JS on desktop */
+  display: none; /* JS toggles on desktop */
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: var(--color-surface);
@@ -240,7 +225,7 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
   box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
   backdrop-filter: blur(6px);
   overflow: hidden;
-  max-height: 48px;
+  max-height: 48px; /* collapsed */
   z-index: 1000;
   opacity: 0;
   transform: translateY(100%);
@@ -260,6 +245,7 @@ body.dark .task-footer {
   transform: translateY(0);
 }
 
+/* Toggle bar */
 .task-footer-toggle {
   text-align: center;
   font-weight: 600;
@@ -268,6 +254,7 @@ body.dark .task-footer {
   color: var(--color-primary);
 }
 
+/* Footer controls: collapsed by default */
 .task-footer .footer-controls {
   display: none;
   flex-direction: column;
@@ -279,25 +266,20 @@ body.dark .task-footer {
   transition: opacity 0.3s ease, max-height 0.3s ease;
 }
 
-.task-footer.expanded {
-  max-height: 320px;
-}
-
+/* Expanded */
+.task-footer.expanded { max-height: 320px; }
 .task-footer.expanded .footer-controls {
   display: flex;
   opacity: 1;
   max-height: 500px;
 }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * RESPONSIVE (mobile overrides)
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 @media (max-width: 600px) {
   .desktop-only { display: none; }
-
-  .task-footer {
-    display: block;
-  }
+  .task-footer { display: block; }
 
   .task-footer select,
   .task-footer input[type="text"],
@@ -307,14 +289,12 @@ body.dark .task-footer {
     box-sizing: border-box;
   }
 
-  .container {
-    padding-bottom: 100px;
-  }
+  .container { padding-bottom: 100px; }
 }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * ANIMATIONS
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -325,11 +305,65 @@ body.dark .task-footer {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/*───────────────────────────────────────────────────────────────*
+/*────────────────────────────────────────────────────────────────*
  * NEW TASK HIGHLIGHT
- *───────────────────────────────────────────────────────────────*/
+ *────────────────────────────────────────────────────────────────*/
 .just-added {
   outline: 2px solid var(--color-accent);
   box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
   transition: outline 0.3s ease, box-shadow 0.3s ease;
+}
+/*────────────────────────────────────────────────────────────────*
+ * DESKTOP TOOLBAR ALIGNMENT FIX
+ *────────────────────────────────────────────────────────────────*/
+.task-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: nowrap; /* keep in one row on desktop */
+}
+
+/* Inputs and select: consistent height and padding */
+.task-controls select,
+.task-controls input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 180px;
+  height: 44px;
+  font-size: 1rem;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* Category select narrower, input grows */
+.task-controls select {
+  flex: 0 0 160px;
+}
+
+/* Buttons: consistent height, pill shape */
+.task-controls button {
+  flex: 0 0 auto;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.task-controls button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+#toggleDarkMode {
+  background: var(--color-accent);
+  color: #fff;
 }
