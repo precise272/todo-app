@@ -1,9 +1,10 @@
 /**
- * To-Do App: premium UI polish with ripple effect on buttons,
- * inline editing, expand/collapse, and drag-and-drop across categories.
+ * To‑Do App
+ * Features: ripple effect on buttons, inline editing, expand/collapse,
+ * drag‑and‑drop reordering, category grouping, dark mode, and responsive footer.
  */
 
-// Ripple effect helper
+// Ripple effect on all buttons
 document.addEventListener("click", e => {
   const btn = e.target.closest("button");
   if (!btn) return;
@@ -18,14 +19,14 @@ document.addEventListener("click", e => {
   setTimeout(() => btn.removeChild(ripple), 600);
 });
 
-// DOM Elements
-const taskInput      = document.getElementById("taskInput");
-const addTaskBtn     = document.getElementById("addTaskBtn");
-const categorySelect = document.getElementById("categorySelect");
-const taskGroups     = document.getElementById("taskGroups");
-const darkModeToggle = document.getElementById("toggleDarkMode");
+// Core DOM references
+const taskInput          = document.getElementById("taskInput");
+const addTaskBtn         = document.getElementById("addTaskBtn");
+const categorySelect     = document.getElementById("categorySelect");
+const taskGroups         = document.getElementById("taskGroups");
+const darkModeToggle     = document.getElementById("toggleDarkMode");
 
-// Mobile footer elements
+// Footer (mobile + desktop)
 const footer             = document.querySelector(".task-footer");
 const footerToggle       = document.querySelector(".task-footer-toggle");
 const addTaskBtnMobile   = document.getElementById("addTaskBtnMobile");
@@ -34,12 +35,12 @@ const categorySelectMobile = document.getElementById("categorySelectMobile");
 
 let dragSourceId = null;
 
-// Initialize on load
+// Initialize
 window.addEventListener("DOMContentLoaded", () => {
   renderTasks(getStoredTasks());
 });
 
-// Add new task (desktop)
+// Add task (desktop)
 addTaskBtn.addEventListener("click", () => {
   const text     = taskInput.value.trim();
   const category = categorySelect.value;
@@ -50,11 +51,10 @@ addTaskBtn.addEventListener("click", () => {
   saveTasks(tasks);
   renderTasks(tasks);
   taskInput.value = "";
-
   focusOnTask(newTask.id);
 });
 
-// Add new task (mobile footer)
+// Add task (mobile footer)
 if (addTaskBtnMobile) {
   addTaskBtnMobile.addEventListener("click", () => {
     const text     = taskInputMobile.value.trim();
@@ -67,21 +67,18 @@ if (addTaskBtnMobile) {
     renderTasks(tasks);
     taskInputMobile.value = "";
     taskInputMobile.blur();
-
-    // Collapse footer
     footer.classList.remove("expanded");
     footerToggle.textContent = "➕ Add Task";
-
     focusOnTask(newTask.id);
   });
 }
 
-// Toggle dark mode
+// Dark mode toggle
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Footer expand/collapse toggle
+// Footer expand/collapse
 if (footerToggle) {
   footerToggle.addEventListener("click", () => {
     footer.classList.toggle("expanded");
@@ -91,12 +88,11 @@ if (footerToggle) {
   });
 }
 
-// Storage helpers
+// Local storage helpers
 function getStoredTasks() {
   const raw = localStorage.getItem("tasks");
   return raw ? JSON.parse(raw) : [];
 }
-
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
@@ -105,7 +101,7 @@ function saveTasks(tasks) {
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
-  // Group by category
+  // Group tasks
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
     (acc[key] = acc[key] || []).push(t);
@@ -121,9 +117,10 @@ function renderTasks(tasks) {
     return a.localeCompare(b);
   });
 
+  // Render each category
   sortedCats.forEach(category => {
     const header = document.createElement("div");
-    header.className   = "category-header";
+    header.className = "category-header";
     header.textContent = category;
     taskGroups.appendChild(header);
 
@@ -143,13 +140,14 @@ function renderTasks(tasks) {
       renderTasks(tasks);
     });
 
+    // Render tasks in this category
     grouped[category].forEach((task, idx) => {
       const li = document.createElement("li");
-      li.draggable        = true;
-      li.dataset.id       = task.id;
+      li.draggable = true;
+      li.dataset.id = task.id;
       li.style.animationDelay = `${idx * 0.05}s`;
 
-      // Drag-and-drop
+      // Drag and drop
       li.addEventListener("dragstart", e => {
         dragSourceId = task.id;
         li.classList.add("dragging");
@@ -183,7 +181,7 @@ function renderTasks(tasks) {
       mainRow.className = "task-main-row";
 
       const checkbox = document.createElement("input");
-      checkbox.type    = "checkbox";
+      checkbox.type = "checkbox";
       checkbox.checked = task.completed;
       checkbox.addEventListener("change", () => {
         task.completed = checkbox.checked;
@@ -193,7 +191,7 @@ function renderTasks(tasks) {
 
       const detail = document.createElement("div");
       detail.className = "task-detail";
-      const span  = document.createElement("span");
+      const span = document.createElement("span");
       span.textContent = task.text;
       const small = document.createElement("small");
       if (task.category) small.textContent = task.category;
@@ -207,7 +205,7 @@ function renderTasks(tasks) {
       actions.className = "task-actions";
 
       const expandBtn = document.createElement("button");
-      expandBtn.className   = "expand-btn";
+      expandBtn.className = "expand-btn";
       expandBtn.textContent = "▾";
       expandBtn.addEventListener("click", () => {
         const expanded = detail.classList.toggle("expanded");
@@ -215,12 +213,12 @@ function renderTasks(tasks) {
       });
 
       const editBtn = document.createElement("button");
-      editBtn.className   = "edit-btn";
+      editBtn.className = "edit-btn";
       editBtn.textContent = "✏️";
       editBtn.addEventListener("click", () => {
         const input = document.createElement("input");
-        input.type      = "text";
-        input.value     = task.text;
+        input.type = "text";
+        input.value = task.text;
         input.className = "edit-input";
         detail.replaceChild(input, span);
         input.focus();
@@ -235,7 +233,7 @@ function renderTasks(tasks) {
       });
 
       const deleteBtn = document.createElement("button");
-      deleteBtn.className   = "delete-btn";
+      deleteBtn.className = "delete-btn";
       deleteBtn.textContent = "❌";
       deleteBtn.addEventListener("click", () => {
         const updated = tasks.filter(t => t.id !== task.id);
@@ -250,13 +248,11 @@ function renderTasks(tasks) {
       ul.appendChild(li);
     });
 
-        taskGroups.appendChild(ul);
+    taskGroups.appendChild(ul);
   });
 }
 
-/*───────────────────────────────────────────────────────────────*
- * Helper: scroll to and highlight a newly added task
- *───────────────────────────────────────────────────────────────*/
+// Highlight and scroll to a newly added task
 function focusOnTask(taskId) {
   const el = document.querySelector(`li[data-id="${taskId}"]`);
   if (el) {
@@ -267,7 +263,8 @@ function focusOnTask(taskId) {
 }
 
 /*───────────────────────────────────────────────────────────────*
- * Desktop footer visibility logic
+ * Desktop footer visibility
+ * Shows sticky footer when toolbar scrolls out of view
  *───────────────────────────────────────────────────────────────*/
 const desktopToolbar = document.querySelector(".task-controls.desktop-only");
 const footerBar = document.querySelector(".task-footer");
@@ -296,3 +293,4 @@ if (desktopToolbar && footerBar) {
 
   observer.observe(desktopToolbar);
 }
+
