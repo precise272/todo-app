@@ -1,7 +1,24 @@
 /**
- * To-Do App: two-row layout (text + buttons)
- * with Expand ▼/▲, Edit, Delete, and drag-and-drop.
+ * To-Do App: premium UI polish with ripple effect on buttons,
+ * inline editing, expand/collapse, and drag-and-drop across categories.
  */
+
+// Ripple effect helper
+document.addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const ripple = document.createElement("span");
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + "px";
+  ripple.style.left = e.clientX - rect.left - size / 2 + "px";
+  ripple.style.top  = e.clientY - rect.top  - size / 2 + "px";
+  ripple.className = "ripple";
+  btn.appendChild(ripple);
+  setTimeout(() => btn.removeChild(ripple), 600);
+});
+
+// DOM Elements
 const taskInput      = document.getElementById("taskInput");
 const addTaskBtn     = document.getElementById("addTaskBtn");
 const categorySelect = document.getElementById("categorySelect");
@@ -10,54 +27,50 @@ const darkModeToggle = document.getElementById("toggleDarkMode");
 
 let dragSourceId = null;
 
+// Initialize on load
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("🟢 App start");
   renderTasks(getStoredTasks());
 });
 
+// Add new task
 addTaskBtn.addEventListener("click", () => {
   const text     = taskInput.value.trim();
   const category = categorySelect.value;
   if (!text) return;
-
   const tasks = getStoredTasks();
-  const newTask = { id: Date.now(), text, completed: false, category };
-  tasks.push(newTask);
-  console.log("➕ Added", newTask);
+  tasks.push({ id: Date.now(), text, completed: false, category });
   saveTasks(tasks);
   renderTasks(tasks);
   taskInput.value = "";
 });
 
+// Toggle dark mode
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  console.log("🌙 Dark mode:", document.body.classList.contains("dark"));
 });
 
+// Storage helpers
 function getStoredTasks() {
   const raw = localStorage.getItem("tasks");
-  const arr = raw ? JSON.parse(raw) : [];
-  console.log("📥 Loaded", arr);
-  return arr;
+  return raw ? JSON.parse(raw) : [];
 }
 
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  console.log("💾 Saved", tasks);
 }
 
+// Render tasks grouped by category
 function renderTasks(tasks) {
-  console.log("🔄 renderTasks", tasks);
   taskGroups.innerHTML = "";
 
-  // Group by category
+  // Group by category in stored order
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
     (acc[key] = acc[key] || []).push(t);
     return acc;
   }, {});
 
-  // Sort categories
+  // Sort categories: Urgent first, Uncategorized last, then alphabetically
   const sortedCats = Object.keys(grouped).sort((a, b) => {
     if (a === "Urgent") return -1;
     if (b === "Urgent") return 1;
@@ -67,14 +80,14 @@ function renderTasks(tasks) {
   });
 
   sortedCats.forEach(category => {
+    // Category header
     const header = document.createElement("div");
     header.className   = "category-header";
     header.textContent = category;
     taskGroups.appendChild(header);
 
+    // List container (allows drop to change category)
     const ul = document.createElement("ul");
-
-    // allow drop to change category
     ul.addEventListener("dragover", e => e.preventDefault());
     ul.addEventListener("drop", e => {
       e.preventDefault();
@@ -82,61 +95,55 @@ function renderTasks(tasks) {
       if (!fromId) return;
       const original = tasks.find(t => t.id === fromId);
       if (original.category === category) return;
-
-      console.log(`📦 Move ${fromId} → ${category}`);
       const idx = tasks.findIndex(t => t.id === fromId);
       const [moved] = tasks.splice(idx, 1);
       moved.category = category;
       tasks.push(moved);
-
       saveTasks(tasks);
       renderTasks(tasks);
     });
 
+    // Render each task in stored order
     grouped[category].forEach((task, idx) => {
       const li = document.createElement("li");
       li.draggable        = true;
       li.dataset.id       = task.id;
       li.style.animationDelay = `${idx * 0.05}s`;
 
-      // drag start/end
+      // Drag-and-drop for reorder within list
       li.addEventListener("dragstart", e => {
         dragSourceId = task.id;
         li.classList.add("dragging");
         e.dataTransfer.setData("text/plain", task.id);
         e.dataTransfer.effectAllowed = "move";
-        console.log("▶️ dragstart", task.id);
       });
       li.addEventListener("dragend", () => {
         li.classList.remove("dragging");
-        console.log("⏹️ dragend", task.id);
       });
-      // dragover/enter/leave/drop for reorder
       li.addEventListener("dragenter", e => {
         e.preventDefault();
         if (task.id !== dragSourceId) li.classList.add("drag-over");
       });
-      li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
+      li.addEventListener("dragleave", () => {
+        li.classList.remove("drag-over");
+      });
       li.addEventListener("dragover", e => e.preventDefault());
       li.addEventListener("drop", e => {
         e.preventDefault();
         li.classList.remove("drag-over");
         const fromId = Number(e.dataTransfer.getData("text/plain"));
         const toId   = task.id;
-        console.log(`📥 drop ${fromId} → ${toId}`);
         if (fromId === toId) return;
-
         const all = getStoredTasks();
         const fromIdx = all.findIndex(t => t.id === fromId);
         const toIdx   = all.findIndex(t => t.id === toId);
         const [moved] = all.splice(fromIdx, 1);
         all.splice(toIdx, 0, moved);
-        console.log("✅ Reorder result", all);
         saveTasks(all);
         renderTasks(all);
       });
 
-      // first row: checkbox + detail
+      // First row: checkbox + text/category
       const mainRow = document.createElement("div");
       mainRow.className = "task-main-row";
 
@@ -144,7 +151,6 @@ function renderTasks(tasks) {
       checkbox.type    = "checkbox";
       checkbox.checked = task.completed;
       checkbox.addEventListener("change", () => {
-        console.log("✔️ complete", task.id, checkbox.checked);
         task.completed = checkbox.checked;
         saveTasks(tasks);
         renderTasks(tasks);
@@ -161,24 +167,25 @@ function renderTasks(tasks) {
       mainRow.append(checkbox, detail);
       li.append(mainRow);
 
-      // second row: action buttons
+      // Second row: action buttons
       const actions = document.createElement("div");
       actions.className = "task-actions";
 
-      // Expand ▼/▲
+      // Expand/collapse button
       const expandBtn = document.createElement("button");
       expandBtn.className   = "expand-btn";
       expandBtn.textContent = "▾";
+      expandBtn.setAttribute("aria-label", "Expand text");
       expandBtn.addEventListener("click", () => {
-        const isExpanded = detail.classList.toggle("expanded");
-        expandBtn.textContent = isExpanded ? "▴" : "▾";
-        console.log("🔍 toggle expand", task.id, isExpanded);
+        const expanded = detail.classList.toggle("expanded");
+        expandBtn.textContent = expanded ? "▴" : "▾";
       });
 
-      // Edit ✏️
+      // Edit button
       const editBtn = document.createElement("button");
       editBtn.className   = "edit-btn";
       editBtn.textContent = "✏️";
+      editBtn.setAttribute("aria-label", "Edit task");
       editBtn.addEventListener("click", () => {
         const input = document.createElement("input");
         input.type      = "text";
@@ -196,10 +203,11 @@ function renderTasks(tasks) {
         });
       });
 
-      // Delete ❌
+      // Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.className   = "delete-btn";
       deleteBtn.textContent = "❌";
+      deleteBtn.setAttribute("aria-label", "Delete task");
       deleteBtn.addEventListener("click", () => {
         const updated = tasks.filter(t => t.id !== task.id);
         saveTasks(updated);
@@ -209,6 +217,7 @@ function renderTasks(tasks) {
       actions.append(expandBtn, editBtn, deleteBtn);
       li.append(actions);
 
+      // Completed styling
       if (task.completed) li.classList.add("completed");
       ul.appendChild(li);
     });
