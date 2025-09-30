@@ -90,10 +90,8 @@ ul {
 
 /* — Task Item — */
 li {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
   background: #fff;
   margin-bottom: 12px;
   padding: 12px 16px;
@@ -109,6 +107,10 @@ li:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+li.dragging {
+  opacity: 0.5;
+}
+
 li.drag-over {
   transform: scale(0.98);
   box-shadow: 0 0 0 2px #4a90e2;
@@ -120,29 +122,51 @@ body.dark li {
   box-shadow: none;
 }
 
-/* — Checkbox — */
-li input[type="checkbox"] {
-  margin: 0;
+/* — First Row: Checkbox + Text Block — */
+.task-main-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.task-main-row input[type="checkbox"] {
+  margin-top: 2px;
   flex-shrink: 0;
 }
 
-/* — Task Detail — */
+/* — Text + Category Stack — */
 .task-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+}
+
+.task-detail span {
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
+  cursor: default;
+  transition: all 0.3s ease;
 }
 
-.task-detail.expanded {
+.task-detail.expanded span {
   white-space: normal;
-  word-break: break-word;
 }
 
-/* — Task Actions (Edit + Delete) — */
+.task-detail small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+/* — Second Row: Action Buttons — */
 .task-actions {
   display: flex;
   gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
 }
 
 .task-actions button {
@@ -157,11 +181,6 @@ li input[type="checkbox"] {
 
 .task-actions button:hover {
   background: #e0e0e0;
-}
-
-/* Optional: ensure expand icon matches style */
-.task-actions .expand-btn {
-  font-size: 18px;
 }
 
 body.dark .task-actions button {
@@ -184,7 +203,7 @@ body.dark .task-actions button:hover {
 }
 
 /* — Completed Task — */
-.completed .task-detail {
+.completed .task-detail span {
   text-decoration: line-through;
   color: gray;
 }
@@ -213,10 +232,18 @@ body.dark .task-actions button:hover {
   .container {
     padding: 16px;
   }
-  input, select, button {
+
+  input,
+  select,
+  button {
     font-size: 16px;
   }
+
   .task-actions {
     gap: 6px;
+  }
+
+  .task-actions button {
+    flex: 1 1 auto;
   }
 }
