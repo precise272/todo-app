@@ -1,4 +1,4 @@
-/* — Typography & Base Layout — */
+/* — Base Layout — */
 body {
   font-family: 'Inter', Arial, sans-serif;
   background: #f9f9fb;
@@ -90,6 +90,10 @@ ul {
 
 /* — Task Item — */
 li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: #fff;
   margin-bottom: 12px;
   padding: 12px 16px;
@@ -98,10 +102,17 @@ li {
   animation: fadeIn 0.4s ease forwards;
   opacity: 0;
   box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 li:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+li.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+  box-shadow: 0 0 0 2px #4a90e2;
 }
 
 body.dark li {
@@ -111,15 +122,14 @@ body.dark li {
 
 /* — Checkbox — */
 li input[type="checkbox"] {
-  margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 /* — Task Detail — */
 .task-detail {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100%;
+  flex-grow: 1;
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -127,7 +137,6 @@ li input[type="checkbox"] {
 .task-detail span {
   display: block;
   width: 100%;
-  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -150,13 +159,11 @@ li input[type="checkbox"] {
   color: #555;
 }
 
-/* — Task Actions Row — */
+/* — Task Actions (Edit + Delete) — */
 .task-actions {
   display: flex;
-  justify-content: flex-start;
-  gap: 12px;
-  padding-top: 8px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .task-actions button {
@@ -227,7 +234,7 @@ body.dark .task-actions button:hover {
   }
 
   .task-actions {
-    gap: 8px;
+    gap: 6px;
   }
 
   .task-actions button {
