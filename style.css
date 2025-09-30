@@ -19,13 +19,28 @@
   --transition: 0.3s ease;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html, body {
-  min-height: 100%;        /* allow body to grow with content */
+  min-height: 100vh;        /* full viewport height */
   background: var(--color-bg);
   font-family: 'Inter', Arial, sans-serif;
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   margin: 0;
+}
+
+/* Extend background past last element */
+body::after {
+  content: "";
+  display: block;
+  height: 60px; /* extra breathing room */
 }
 
 /*────────────────────────────────────────────────────────────────*
@@ -35,7 +50,6 @@ body.dark {
   background: linear-gradient(180deg, #14151a 0%, #1e1f26 100%);
   color: var(--color-text-light);
 }
-
 
 body.dark .container {
   background: #1e1f26;
@@ -104,10 +118,8 @@ body.dark .edit-input {
 }
 
 /*────────────────────────────────────────────────────────────────*
- * REST OF YOUR EXISTING LIGHT THEME STYLES (unchanged)
+ * LIGHT THEME STYLES
  *────────────────────────────────────────────────────────────────*/
-
-/* Container */
 .container {
   position: relative;
   max-width: 640px;
@@ -120,7 +132,6 @@ body.dark .edit-input {
   animation: fadeSlideIn 0.6s ease-out;
 }
 
-/* Accent bar */
 .container::before {
   content: '';
   position: absolute;
@@ -131,7 +142,6 @@ body.dark .edit-input {
   border-top-right-radius: var(--radius);
 }
 
-/* Header */
 header {
   text-align: center;
   margin-bottom: 32px;
@@ -362,13 +372,17 @@ li:hover {
 
   .task-controls {
     flex-direction: column;
+    align-items: center;      /* center children horizontally */
     gap: 12px;
+    width: 100%;
   }
 
   .task-controls select,
   .task-controls input[type="text"],
   .task-controls button {
     width: 100%;
+    max-width: 100%;          /* prevent overflow */
+    box-sizing: border-box;   /* include padding in width */
   }
 
   header h1 {
