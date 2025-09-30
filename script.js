@@ -1,7 +1,7 @@
 /**
- * To-Do List App with Debug Logs for Drag-and-Drop
+ * To-Do List App with Inline Editing & Working Drag-and-Drop
  * Author: Mike
- * Description: Create, edit, delete, categorize, and reorder tasks with verbose logging.
+ * Description: Create, edit, delete, categorize, and reorder tasks.
  */
 
 // DOM Elements
@@ -11,237 +11,196 @@ const categorySelect = document.getElementById("categorySelect");
 const taskGroups     = document.getElementById("taskGroups");
 const darkModeToggle = document.getElementById("toggleDarkMode");
 
-console.log("🟢 App initializing…");
+/** ID of the task currently being dragged */
+let dragSourceId = null;
 
+// Load & render on start
 window.addEventListener("DOMContentLoaded", () => {
-  console.log("📥 DOMContentLoaded, loading tasks");
-  const tasks = getStoredTasks();
-  renderTasks(tasks);
+  renderTasks(getStoredTasks());
 });
 
 // Add new task
 addTaskBtn.addEventListener("click", () => {
   const text     = taskInput.value.trim();
   const category = categorySelect.value;
-  if (!text) {
-    console.log("⚠️ AddTask clicked but no text");
-    return;
-  }
+  if (!text) return;
 
   const tasks = getStoredTasks();
-  const newTask = { id: Date.now(), text, completed: false, category };
-  tasks.push(newTask);
-  console.log("➕ Adding task:", newTask);
+  tasks.push({ id: Date.now(), text, completed: false, category });
   saveTasks(tasks);
   renderTasks(tasks);
   taskInput.value = "";
 });
 
-// Toggle dark mode
+// Dark mode toggle
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  console.log("🌙 Dark mode toggled. New classList:", document.body.classList);
 });
 
 // Helpers: localStorage
 function getStoredTasks() {
-  const raw = localStorage.getItem("tasks");
-  const arr = raw ? JSON.parse(raw) : [];
-  console.log("📤 getStoredTasks ->", arr);
-  return arr;
+  return JSON.parse(localStorage.getItem("tasks")) || [];
 }
 
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
-  console.log("💾 saveTasks ->", tasks);
 }
 
 /**
- * Renders tasks, grouped & sorted, and wires up drag-and-drop.
- * @param {Array} tasks
+ * Render all tasks, grouped by category, & wire up drag-and-drop.
+ * @param {Array<Object>} tasks
  */
 function renderTasks(tasks) {
-  console.log("🌐 renderTasks(", tasks, ")");
   taskGroups.innerHTML = "";
 
-  // 1) Group by category
+  // 1. Group tasks by category, in stored order
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
     (acc[key] = acc[key] || []).push(t);
     return acc;
   }, {});
-  console.log("🗂️ Grouped tasks:", grouped);
 
-  // 2) Sort categories
-  const sortedCats = Object.keys(grouped).sort((a, b) => {
-    if (a === "Urgent")      return -1;
-    if (b === "Urgent")      return 1;
+  // 2. Sort category headers: Urgent first, Uncategorized last, then alpha
+  const sortedCategories = Object.keys(grouped).sort((a, b) => {
+    if (a === "Urgent") return -1;
+    if (b === "Urgent") return 1;
     if (a === "Uncategorized") return 1;
     if (b === "Uncategorized") return -1;
     return a.localeCompare(b);
   });
-  console.log("🔀 Sorted categories:", sortedCats);
 
-  // 3) Build UI
-  sortedCats.forEach(cat => {
-    // Category header
+  // 3. Render each category
+  sortedCategories.forEach(category => {
+    // Header
     const header = document.createElement("div");
     header.className   = "category-header";
-    header.textContent = cat;
+    header.textContent = category;
     taskGroups.appendChild(header);
 
+    // List
     const ul = document.createElement("ul");
 
-    // Sort tasks by id (creation time)
-    grouped[cat]
-      .sort((a, b) => a.id - b.id)
-      .forEach((task, idx) => {
-        // Create LI
-        const li = document.createElement("li");
-        li.draggable      = true;
-        li.dataset.id     = task.id;
-        li.style.animationDelay = `${idx * 0.05}s`;
-        console.log(`🔨 Creating <li> for task.id=${task.id}`);
+    // 4. Iterate in the order tasks are stored (no .sort by id)
+    grouped[category].forEach((task, idx) => {
+      const li = document.createElement("li");
+      li.draggable        = true;
+      li.dataset.id       = task.id;
+      li.style.animationDelay = `${idx * 0.05}s`;
 
-        // — Drag Events —
-        li.addEventListener("dragstart", e => {
-          console.log("▶️ dragstart on", task.id);
-          e.dataTransfer.setData("text/plain", task.id);
-          e.dataTransfer.effectAllowed = "move";
-          li.classList.add("dragging");
-        });
+      // — Drag & Drop Handlers —
+      li.addEventListener("dragstart", e => {
+        dragSourceId = task.id;
+        li.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", task.id);
+      });
 
-        li.addEventListener("dragend", () => {
-          console.log("⏹️ dragend on", task.id);
-          li.classList.remove("dragging");
-        });
+      li.addEventListener("dragend", () => {
+        li.classList.remove("dragging");
+      });
 
-        li.addEventListener("dragenter", e => {
-          e.preventDefault();
-          if (!li.classList.contains("dragging")) {
-            console.log("↗️ dragenter on", task.id);
-            li.classList.add("drag-over");
-          }
-        });
+      li.addEventListener("dragenter", e => {
+        e.preventDefault();
+        if (task.id !== dragSourceId) li.classList.add("drag-over");
+      });
 
-        li.addEventListener("dragleave", () => {
-          console.log("↘️ dragleave on", task.id);
-          li.classList.remove("drag-over");
-        });
+      li.addEventListener("dragleave", () => {
+        li.classList.remove("drag-over");
+      });
 
-        li.addEventListener("dragover", e => {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = "move";
-          // console.log("↔️ dragover on", task.id);
-        });
+      li.addEventListener("dragover", e => {
+        e.preventDefault();
+      });
 
-        li.addEventListener("drop", e => {
-          e.preventDefault();
-          li.classList.remove("drag-over");
-          const fromId = Number(e.dataTransfer.getData("text/plain"));
-          const toId   = task.id;
-          console.log("📥 drop event: from", fromId, "to", toId);
+      li.addEventListener("drop", e => {
+        e.preventDefault();
+        li.classList.remove("drag-over");
 
-          if (fromId === toId) {
-            console.log("ℹ️ Dropped on same item, no reorder.");
-            return;
-          }
+        const fromId = Number(e.dataTransfer.getData("text/plain"));
+        const toId   = task.id;
+        if (fromId === toId) return;
 
-          const allTasks = getStoredTasks();
-          console.log("🔄 Before reorder:", allTasks);
+        const all = getStoredTasks();
+        const fromIdx = all.findIndex(t => t.id === fromId);
+        const toIdx   = all.findIndex(t => t.id === toId);
+        const [moved] = all.splice(fromIdx, 1);
+        all.splice(toIdx, 0, moved);
 
-          const fromIdx = allTasks.findIndex(t => t.id === fromId);
-          const toIdx   = allTasks.findIndex(t => t.id === toId);
-          console.log("🕵️ Indices fromIdx=", fromIdx, "toIdx=", toIdx);
+        saveTasks(all);
+        renderTasks(all);
+      });
 
-          const [moved] = allTasks.splice(fromIdx, 1);
-          allTasks.splice(toIdx, 0, moved);
-          console.log("✅ After reorder:", allTasks);
+      // — Checkbox —
+      const checkbox = document.createElement("input");
+      checkbox.type    = "checkbox";
+      checkbox.checked = task.completed;
+      checkbox.addEventListener("change", () => {
+        task.completed = checkbox.checked;
+        saveTasks(tasks);
+        renderTasks(tasks);
+      });
 
-          saveTasks(allTasks);
-          renderTasks(allTasks);
-        });
+      // — Task Detail (text + category) —
+      const detail = document.createElement("div");
+      detail.className = "task-detail";
+      const span       = document.createElement("span");
+      span.textContent = task.text;
+      span.addEventListener("click", e => {
+        detail.classList.toggle("expanded");
+        e.stopPropagation();
+      });
+      const small = document.createElement("small");
+      if (task.category) small.textContent = task.category;
+      detail.append(span, small);
 
-        // — Checkbox —
-        const checkbox = document.createElement("input");
-        checkbox.type    = "checkbox";
-        checkbox.checked = task.completed;
-        checkbox.addEventListener("change", () => {
-          console.log("✅ Checkbox changed for", task.id, "to", checkbox.checked);
-          task.completed = checkbox.checked;
+      // — Actions (Edit + Delete) —
+      const actions = document.createElement("div");
+      actions.className = "task-actions";
+
+      // Edit
+      const editBtn = document.createElement("button");
+      editBtn.className   = "edit-btn";
+      editBtn.textContent = "✏️";
+      editBtn.setAttribute("aria-label", "Edit task");
+      editBtn.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type      = "text";
+        input.value     = task.text;
+        input.className = "edit-input";
+        detail.replaceChild(input, span);
+        input.focus();
+
+        input.addEventListener("blur", () => {
+          task.text = input.value.trim() || task.text;
           saveTasks(tasks);
           renderTasks(tasks);
         });
 
-        // — Detail (text + category) —
-        const detail = document.createElement("div");
-        detail.className = "task-detail";
-        const span = document.createElement("span");
-        span.textContent = task.text;
-        span.addEventListener("click", e => {
-          detail.classList.toggle("expanded");
-          console.log("🔍 Toggled expand on", task.id, detail.classList);
-          e.stopPropagation();
+        input.addEventListener("keydown", e => {
+          if (e.key === "Enter") input.blur();
         });
-        const small = document.createElement("small");
-        if (task.category) small.textContent = task.category;
-        detail.append(span, small);
-
-        // — Actions (Edit + Delete) —
-        const btnGroup = document.createElement("div");
-        btnGroup.className = "task-actions";
-
-        const editBtn = document.createElement("button");
-        editBtn.className   = "edit-btn";
-        editBtn.textContent = "✏️";
-        editBtn.setAttribute("aria-label", "Edit task");
-        editBtn.addEventListener("click", () => {
-          console.log("✏️ Edit clicked for", task.id);
-          const input = document.createElement("input");
-          input.type      = "text";
-          input.value     = task.text;
-          input.className = "edit-input";
-          detail.replaceChild(input, span);
-          input.focus();
-
-          input.addEventListener("blur", () => {
-            console.log("✔️ Edit blur for", task.id, "new text:", input.value);
-            task.text = input.value.trim() || task.text;
-            saveTasks(tasks);
-            renderTasks(tasks);
-          });
-
-          input.addEventListener("keydown", e => {
-            if (e.key === "Enter") {
-              console.log("↵ Enter pressed on edit for", task.id);
-              input.blur();
-            }
-          });
-        });
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className   = "delete-btn";
-        deleteBtn.textContent = "❌";
-        deleteBtn.setAttribute("aria-label", "Delete task");
-        deleteBtn.addEventListener("click", () => {
-          console.log("🗑️ Delete clicked for", task.id);
-          const updated = tasks.filter(t => t.id !== task.id);
-          saveTasks(updated);
-          renderTasks(updated);
-        });
-
-        btnGroup.append(editBtn, deleteBtn);
-
-        // Completed styling
-        if (task.completed) {
-          console.log("☑️ Applying completed style for", task.id);
-          li.classList.add("completed");
-        }
-
-        // — Assemble —
-        li.append(checkbox, detail, btnGroup);
-        ul.appendChild(li);
       });
+
+      // Delete
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className   = "delete-btn";
+      deleteBtn.textContent = "❌";
+      deleteBtn.setAttribute("aria-label", "Delete task");
+      deleteBtn.addEventListener("click", () => {
+        const updated = tasks.filter(t => t.id !== task.id);
+        saveTasks(updated);
+        renderTasks(updated);
+      });
+
+      actions.append(editBtn, deleteBtn);
+
+      // Completed style
+      if (task.completed) li.classList.add("completed");
+
+      // Assemble row: checkbox | detail | actions
+      li.append(checkbox, detail, actions);
+      ul.appendChild(li);
+    });
 
     taskGroups.appendChild(ul);
   });
