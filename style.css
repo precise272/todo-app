@@ -97,11 +97,16 @@ li input[type="checkbox"] {
   margin-right: 10px;
 }
 
-.task-detail {
-  display: flex;
-  flex-direction: column;
+.task-detail span {
+  display: block;
   flex: 1 1 auto;
-  width: 100%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-right: 12px; /* 👈 adds space between text and buttons */
 }
 
 .task-detail span {
@@ -116,12 +121,12 @@ li input[type="checkbox"] {
 }
 
 .task-detail span.expanded {
-  max-height: none;
   white-space: normal;
   word-break: break-word;
   overflow: visible;
+  text-overflow: unset;
+  padding-right: 12px; /* match collapsed padding */
 }
-
 
 .task-detail small {
   margin-left: 8px;
@@ -160,6 +165,8 @@ li input[type="checkbox"] {
   color: #ff4d4d;
   cursor: pointer;
   transition: transform 0.2s ease;
+  padding: 4px 8px; /* prevent full-width expansion */
+  width: auto;       /* ensure it stays compact */
 }
 
 .delete-btn:hover {
