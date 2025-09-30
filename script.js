@@ -26,10 +26,10 @@ const taskGroups     = document.getElementById("taskGroups");
 const darkModeToggle = document.getElementById("toggleDarkMode");
 
 // Mobile footer elements
-const footer         = document.querySelector(".task-footer");
-const footerToggle   = document.querySelector(".task-footer-toggle");
-const addTaskBtnMobile = document.getElementById("addTaskBtnMobile");
-const taskInputMobile  = document.getElementById("taskInputMobile");
+const footer             = document.querySelector(".task-footer");
+const footerToggle       = document.querySelector(".task-footer-toggle");
+const addTaskBtnMobile   = document.getElementById("addTaskBtnMobile");
+const taskInputMobile    = document.getElementById("taskInputMobile");
 const categorySelectMobile = document.getElementById("categorySelectMobile");
 
 let dragSourceId = null;
@@ -51,7 +51,6 @@ addTaskBtn.addEventListener("click", () => {
   renderTasks(tasks);
   taskInput.value = "";
 
-  // Scroll to and highlight new task
   focusOnTask(newTask.id);
 });
 
@@ -73,7 +72,6 @@ if (addTaskBtnMobile) {
     footer.classList.remove("expanded");
     footerToggle.textContent = "➕ Add Task";
 
-    // Scroll to and highlight new task
     focusOnTask(newTask.id);
   });
 }
@@ -248,15 +246,13 @@ function renderTasks(tasks) {
       actions.append(expandBtn, editBtn, deleteBtn);
       li.append(actions);
 
-            if (task.completed) li.classList.add("completed");
+      if (task.completed) li.classList.add("completed");
       ul.appendChild(li);
     });
 
-    taskGroups.appendChild(ul);
+        taskGroups.appendChild(ul);
   });
 }
-
-// ... all your existing code above ...
 
 /*───────────────────────────────────────────────────────────────*
  * Helper: scroll to and highlight a newly added task
@@ -281,15 +277,21 @@ if (desktopToolbar && footerBar) {
     entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Toolbar visible at top → hide footer
-          footerBar.style.display = "none";
+          // Toolbar visible → hide footer
+          footerBar.classList.remove("visible");
+          setTimeout(() => {
+            if (!footerBar.classList.contains("visible")) {
+              footerBar.style.display = "none";
+            }
+          }, 300); // matches CSS transition
         } else {
-          // Toolbar scrolled out of view → show footer
+          // Toolbar scrolled out → show footer
           footerBar.style.display = "block";
+          requestAnimationFrame(() => footerBar.classList.add("visible"));
         }
       });
     },
-    { root: null, threshold: 0 } // watch visibility in viewport
+    { root: null, threshold: 0 }
   );
 
   observer.observe(desktopToolbar);
