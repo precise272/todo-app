@@ -5,13 +5,13 @@ const categorySelect = document.getElementById("categorySelect");
 const taskGroups = document.getElementById("taskGroups");
 const darkModeToggle = document.getElementById("toggleDarkMode");
 
-// Load tasks on page load
+let dragSourceId = null; // Track dragged task
+
 window.addEventListener("DOMContentLoaded", () => {
   const savedTasks = getStoredTasks();
   renderTasks(savedTasks);
 });
 
-// Add new task
 addTaskBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   const category = categorySelect.value;
@@ -30,22 +30,18 @@ addTaskBtn.addEventListener("click", () => {
   taskInput.value = "";
 });
 
-// Toggle dark mode
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Retrieve tasks from localStorage
 function getStoredTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
 }
 
-// Save tasks to localStorage
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Render tasks grouped by category
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
@@ -74,7 +70,34 @@ function renderTasks(tasks) {
 
     grouped[category].sort((a, b) => a.id - b.id).forEach((task, index) => {
       const li = document.createElement("li");
+      li.setAttribute("draggable", "true");
+      li.dataset.id = task.id;
       li.style.animationDelay = `${index * 0.05}s`;
+
+      // Drag events
+      li.addEventListener("dragstart", () => {
+        dragSourceId = task.id;
+      });
+
+      li.addEventListener("dragover", e => {
+        e.preventDefault();
+      });
+
+      li.addEventListener("drop", () => {
+        const draggedId = dragSourceId;
+        const targetId = task.id;
+        if (draggedId === targetId) return;
+
+        const allTasks = getStoredTasks();
+        const draggedIndex = allTasks.findIndex(t => t.id === draggedId);
+        const targetIndex = allTasks.findIndex(t => t.id === targetId);
+
+        const [draggedTask] = allTasks.splice(draggedIndex, 1);
+        allTasks.splice(targetIndex, 0, draggedTask);
+
+        saveTasks(allTasks);
+        renderTasks(allTasks);
+      });
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
@@ -101,14 +124,13 @@ function renderTasks(tasks) {
       detail.appendChild(textSpan);
       detail.appendChild(categoryLabel);
 
-      // Action buttons row
       const btnGroup = document.createElement("div");
       btnGroup.className = "task-actions";
 
       const editBtn = document.createElement("button");
       editBtn.className = "edit-btn";
       editBtn.textContent = "✏️";
-            editBtn.setAttribute("aria-label", "Edit task");
+      editBtn.setAttribute("aria-label", "Edit task");
       editBtn.addEventListener("click", () => {
         const input = document.createElement("input");
         input.type = "text";
@@ -128,14 +150,12 @@ function renderTasks(tasks) {
         });
       });
 
-      // Drag button (non-functional placeholder)
       const dragBtn = document.createElement("button");
       dragBtn.className = "drag-btn";
       dragBtn.textContent = "↕️";
       dragBtn.setAttribute("aria-label", "Drag task");
       dragBtn.style.cursor = "grab";
 
-      // Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
       deleteBtn.textContent = "❌";
@@ -146,18 +166,15 @@ function renderTasks(tasks) {
         renderTasks(updatedTasks);
       });
 
-      // Append buttons to action row
       btnGroup.appendChild(editBtn);
       btnGroup.appendChild(dragBtn);
       btnGroup.appendChild(deleteBtn);
 
-      // Apply completed styling
       if (task.completed) li.classList.add("completed");
 
-      // Assemble task item
       li.appendChild(checkbox);
       li.appendChild(detail);
-      li.appendChild(btnGroup); // buttons now inside li, below detail
+      li.appendChild(btnGroup);
       ul.appendChild(li);
     });
 
