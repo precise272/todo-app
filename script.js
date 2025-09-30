@@ -45,10 +45,12 @@ function renderTasks(tasks) {
     return acc;
   }, {});
 
-  // Sort categories: Urgent first, then alphabetical
+  // Sort categories: Urgent first, then alphabetical (excluding Urgent)
   const sortedCategories = Object.keys(grouped).sort((a, b) => {
     if (a === "Urgent") return -1;
     if (b === "Urgent") return 1;
+    if (a === "Uncategorized") return 1; // push Uncategorized to the end
+    if (b === "Uncategorized") return -1;
     return a.localeCompare(b);
   });
 
@@ -108,7 +110,6 @@ function renderTasks(tasks) {
     taskGroups.appendChild(ul);
   });
 }
-
 
 // helper to persist & redraw
 function saveAndRerender(tasks) {
