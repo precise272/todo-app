@@ -7,11 +7,13 @@ const darkModeToggle = document.getElementById("toggleDarkMode");
 
 let dragSourceId = null; // Track dragged task
 
+// Load tasks on page load
 window.addEventListener("DOMContentLoaded", () => {
   const savedTasks = getStoredTasks();
   renderTasks(savedTasks);
 });
 
+// Add new task
 addTaskBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   const category = categorySelect.value;
@@ -30,18 +32,22 @@ addTaskBtn.addEventListener("click", () => {
   taskInput.value = "";
 });
 
+// Toggle dark mode
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
+// Retrieve tasks from localStorage
 function getStoredTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
 }
 
+// Save tasks to localStorage
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+// Render tasks grouped by category
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
@@ -77,6 +83,11 @@ function renderTasks(tasks) {
       // Drag events
       li.addEventListener("dragstart", () => {
         dragSourceId = task.id;
+        li.classList.add("dragging");
+      });
+
+      li.addEventListener("dragend", () => {
+        li.classList.remove("dragging");
       });
 
       li.addEventListener("dragover", e => {
@@ -99,6 +110,7 @@ function renderTasks(tasks) {
         renderTasks(allTasks);
       });
 
+      // Checkbox
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = task.completed;
@@ -108,6 +120,7 @@ function renderTasks(tasks) {
         renderTasks(tasks);
       });
 
+      // Task detail
       const detail = document.createElement("div");
       detail.className = "task-detail";
 
@@ -124,6 +137,7 @@ function renderTasks(tasks) {
       detail.appendChild(textSpan);
       detail.appendChild(categoryLabel);
 
+      // Button group (Edit + Delete)
       const btnGroup = document.createElement("div");
       btnGroup.className = "task-actions";
 
@@ -150,12 +164,6 @@ function renderTasks(tasks) {
         });
       });
 
-      const dragBtn = document.createElement("button");
-      dragBtn.className = "drag-btn";
-      dragBtn.textContent = "↕️";
-      dragBtn.setAttribute("aria-label", "Drag task");
-      dragBtn.style.cursor = "grab";
-
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
       deleteBtn.textContent = "❌";
@@ -167,11 +175,11 @@ function renderTasks(tasks) {
       });
 
       btnGroup.appendChild(editBtn);
-      btnGroup.appendChild(dragBtn);
       btnGroup.appendChild(deleteBtn);
 
       if (task.completed) li.classList.add("completed");
 
+      // Assemble task row
       li.appendChild(checkbox);
       li.appendChild(detail);
       li.appendChild(btnGroup);
