@@ -25,51 +25,62 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<main class="container">
-  <!-- Header with gradient text & tagline -->
-  <header>
-    <h1>My To-Do<span class="accent">Pro</span></h1>
-    <p class="tagline">Stay on top of your day with style</p>
-  </header>
+  <main class="container">
+    <!-- Header with gradient text & tagline -->
+    <header>
+      <h1>My To-Do<span class="accent">Pro</span></h1>
+      <p class="tagline">Stay on top of your day with style</p>
+    </header>
 
-  <!-- Task Controls Toolbar -->
-  <section class="task-controls" aria-label="Task Controls">
-    <label for="categorySelect" class="visually-hidden">Category</label>
-    <select id="categorySelect" name="category">
-      <option value="">No Category</option>
-      <option value="Work">Work</option>
-      <option value="Personal">Personal</option>
-      <option value="Urgent">Urgent</option>
-    </select>
+    <!-- Task Controls Toolbar (desktop) -->
+    <section class="task-controls desktop-only" aria-label="Task Controls">
+      <label for="categorySelect" class="visually-hidden">Category</label>
+      <select id="categorySelect" name="category">
+        <option value="">No Category</option>
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+        <option value="Urgent">Urgent</option>
+      </select>
 
-    <label for="taskInput" class="visually-hidden">New Task</label>
-    <input
-      type="text"
-      id="taskInput"
-      name="task"
-      placeholder="Add a new task..."
-      autocomplete="off" />
+      <label for="taskInput" class="visually-hidden">New Task</label>
+      <input
+        type="text"
+        id="taskInput"
+        name="task"
+        placeholder="Add a new task..."
+        autocomplete="off" />
 
-    <button id="addTaskBtn" type="button">Add Task</button>
-    <button id="toggleDarkMode" type="button">Toggle Theme</button>
-  </section>
+      <button id="addTaskBtn" type="button">Add Task</button>
+      <button id="toggleDarkMode" type="button">Toggle Theme</button>
+    </section>
 
-  <!-- Task Groups Render Here -->
-  <section id="taskGroups" aria-label="Task List"></section>
-</main>
-<!-- Sticky footer bar -->
-<div class="task-footer">
-  <div class="task-footer-toggle">➕ Add Task</div>
-  <div class="task-footer-form">
-    <select>
-      <option>No Category</option>
-      <option>Work</option>
-      <option>Urgent</option>
-    </select>
-    <input type="text" placeholder="Add a new task..." />
-    <button>Add Task</button>
+    <!-- Task Groups Render Here -->
+    <section id="taskGroups" aria-label="Task List"></section>
+  </main>
+
+  <!-- Sticky footer bar (mobile only) -->
+  <div class="task-footer mobile-only">
+    <div class="task-footer-toggle">➕ Add Task</div>
+    <div class="task-controls footer-controls" aria-label="Task Controls">
+      <label for="categorySelectMobile" class="visually-hidden">Category</label>
+      <select id="categorySelectMobile" name="category">
+        <option value="">No Category</option>
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+        <option value="Urgent">Urgent</option>
+      </select>
+
+      <label for="taskInputMobile" class="visually-hidden">New Task</label>
+      <input
+        type="text"
+        id="taskInputMobile"
+        name="task"
+        placeholder="Add a new task..."
+        autocomplete="off" />
+
+      <button id="addTaskBtnMobile" type="button">Add Task</button>
+    </div>
   </div>
-</div>
 
   <!-- JavaScript -->
   <script src="script.js" defer></script>
