@@ -33,12 +33,13 @@ html, body {
   font-family: 'Inter', Arial, sans-serif;
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
+  margin: 0;
 }
 
 body::after {
   content: "";
   display: block;
-  height: 60px; /* space for sticky footer */
+  height: 60px;
 }
 
 /*────────────────────────────────────────────────────────────────*
@@ -72,7 +73,7 @@ body.dark .task-actions button:hover { background: #4a4d59; }
 body.dark .edit-input { background: #2a2c34; color: var(--color-text-light); border: 1px solid #555; }
 
 /*────────────────────────────────────────────────────────────────*
- * CONTAINER & HEADER
+ * LIGHT THEME STYLES
  *────────────────────────────────────────────────────────────────*/
 .container {
   position: relative;
@@ -105,100 +106,30 @@ header h1 {
 }
 header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK CONTROLS (shared desktop + footer)
- *────────────────────────────────────────────────────────────────*/
+/* Task Controls (desktop toolbar) */
 .task-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
+  display: flex; gap: var(--gap); margin-bottom: 28px;
+  flex-wrap: wrap; align-items: center;
 }
-
-/* Shared sizing for select, input, buttons */
 .task-controls select,
-.task-controls input[type="text"],
-.task-controls button {
-  font-size: 1rem;
-  height: 44px;
-  padding: 0 14px;
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
-
-.task-controls select {
-  flex: 0 0 180px;
-  min-width: 180px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-}
-
 .task-controls input[type="text"] {
-  flex: 1 1 auto;
-  min-width: 200px;
-  border: 1px solid var(--color-border);
+  flex: 1 1 auto; min-width: 180px;
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px; font-size: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
-
 .task-controls button {
-  flex: 0 0 auto;
-  border: none;
-  background: var(--color-primary);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 999px;
-  padding: 0 20px;
+  flex: none; padding: 12px 20px; border-radius: 999px;
+  border: none; background: var(--color-primary); color: #fff;
+  font-weight: 600; cursor: pointer;
   transition: background var(--transition), transform 0.2s ease;
-  white-space: nowrap;
 }
+.task-controls button:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+#toggleDarkMode { background: var(--color-accent); color: #fff; }
 
-.task-controls button:hover {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-}
-
-#toggleDarkMode {
-  background: var(--color-accent);
-  color: #fff;
-}
-
-/*────────────────────────────────────────────────────────────────*
- * DESKTOP TOOLBAR: TWO-ROW GRID (buttons aligned right)
- *────────────────────────────────────────────────────────────────*/
-.task-controls.desktop-only {
-  display: grid;
-  grid-template-columns: 180px 1fr 180px 180px;
-  grid-template-rows: auto auto;
-  gap: 12px;
-  margin-bottom: 28px;
-}
-
-/* Row 1: Category & Task input */
-.task-controls.desktop-only select {
-  grid-area: 1 / 1;
-}
-.task-controls.desktop-only input[type="text"] {
-  grid-area: 1 / 2;
-}
-
-/* Row 2: Add Task & Toggle Theme, in rightmost columns */
-.task-controls.desktop-only #addTaskBtn {
-  grid-area: 2 / 3;
-}
-.task-controls.desktop-only #toggleDarkMode {
-  grid-area: 2 / 4;
-}
-
-/* Uniform button width */
-.task-controls.desktop-only button {
-  width: 180px;
-}
-
-
-/*────────────────────────────────────────────────────────────────*
- * CATEGORY HEADER
- *────────────────────────────────────────────────────────────────*/
+/* Category Header */
 .category-header {
   font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1px; color: var(--color-primary-dark);
@@ -206,40 +137,25 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
   padding-bottom: 4px;
 }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK LIST
- *────────────────────────────────────────────────────────────────*/
+/* Task List */
 ul { list-style: none; padding: 0; margin: 0; }
 li {
-  background: var(--color-surface);
-  border-radius: var(--radius);
+  background: var(--color-surface); border-radius: var(--radius);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   margin-bottom: 14px; padding: 16px;
   opacity: 1; transform: translateY(0);
   animation: fadeIn 0.3s ease forwards;
 }
 li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-
-/* task rows */
 .task-main-row { display: flex; align-items: flex-start; gap: var(--gap); }
 .task-main-row input[type="checkbox"] { margin-top: 4px; width: 20px; height: 20px; flex-shrink: 0; }
-
-.task-detail {
-  flex: 1; display: flex; flex-direction: column;
-  overflow: hidden; transition: max-height var(--transition);
-  max-height: 2.6em;
-}
+.task-detail { flex: 1; display: flex; flex-direction: column; overflow: hidden; transition: max-height var(--transition); max-height: 2.6em; }
 .task-detail.expanded { max-height: 10em; }
-.task-detail span {
-  font-size: 1rem; line-height: 1.4; margin-bottom: 4px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
+.task-detail span { font-size: 1rem; line-height: 1.4; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .task-detail.expanded span { white-space: normal; }
 .task-detail small { font-size: 0.8rem; color: #777; }
 
-/*────────────────────────────────────────────────────────────────*
- * TASK ACTIONS
- *────────────────────────────────────────────────────────────────*/
+/* Actions */
 .task-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px; }
 .task-actions button {
   background: var(--color-muted); border: none; border-radius: 8px;
@@ -248,35 +164,22 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 }
 .task-actions button:hover { background: var(--color-border); }
 
-/*────────────────────────────────────────────────────────────────*
- * EDIT INPUT
- *────────────────────────────────────────────────────────────────*/
+/* Edit input */
 .edit-input {
-  width: 100%;
-  padding: 8px;
-  border-radius: var(--radius);
+  width: 100%; padding: 8px; border-radius: var(--radius);
   border: 1px solid #888;
   transition: border var(--transition), box-shadow var(--transition);
 }
-.edit-input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
-  outline: none;
-}
+.edit-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(74,144,226,0.2); outline: none; }
 
-/*────────────────────────────────────────────────────────────────*
- * COMPLETED TASK
- *────────────────────────────────────────────────────────────────*/
-.completed .task-detail span {
-  color: #999;
-  text-decoration: line-through;
-}
+/* Completed task */
+.completed .task-detail span { color: #999; text-decoration: line-through; }
 
 /*────────────────────────────────────────────────────────────────*
  * STICKY FOOTER (desktop + mobile)
  *────────────────────────────────────────────────────────────────*/
 .task-footer {
-  display: none; /* JS toggles on desktop */
+  display: none; /* hidden by default, JS toggles on desktop */
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: var(--color-surface);
@@ -284,8 +187,10 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
   box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
   backdrop-filter: blur(6px);
   overflow: hidden;
-  max-height: 48px; /* collapsed */
+  max-height: 48px; /* collapsed height */
   z-index: 1000;
+
+  /* Animation states */
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
@@ -298,6 +203,7 @@ body.dark .task-footer {
   backdrop-filter: blur(8px);
 }
 
+/* When JS toggles .visible on desktop */
 .task-footer.visible {
   display: block;
   opacity: 1;
@@ -313,7 +219,7 @@ body.dark .task-footer {
   color: var(--color-primary);
 }
 
-/* Footer controls: collapsed by default */
+/* Footer controls hidden by default everywhere */
 .task-footer .footer-controls {
   display: none;
   flex-direction: column;
@@ -325,26 +231,30 @@ body.dark .task-footer {
   transition: opacity 0.3s ease, max-height 0.3s ease;
 }
 
-/* Expanded */
-.task-footer.expanded { max-height: 320px; }
+/* Expanded state (applies globally) */
+.task-footer.expanded {
+  max-height: 320px;
+}
+
 .task-footer.expanded .footer-controls {
   display: flex;
   opacity: 1;
-  max-height: 500px;
+  max-height: 500px; /* enough to show form */
 }
 
 /*────────────────────────────────────────────────────────────────*
  * RESPONSIVE (mobile overrides)
  *────────────────────────────────────────────────────────────────*/
 @media (max-width: 600px) {
+  /* Hide the desktop toolbar */
   .desktop-only { display: none; }
-  .task-footer { display: block; }
 
-  .task-footer .task-controls {
-    flex-direction: column;
-    gap: 12px;
+  /* On mobile, footer is always visible */
+  .task-footer {
+    display: block;
   }
 
+  /* Ensure inputs/buttons fit mobile width */
   .task-footer select,
   .task-footer input[type="text"],
   .task-footer button {
@@ -353,7 +263,10 @@ body.dark .task-footer {
     box-sizing: border-box;
   }
 
-  .container { padding-bottom: 100px; }
+  /* Add bottom padding so list isn't hidden */
+  .container {
+    padding-bottom: 100px;
+  }
 }
 
 /*────────────────────────────────────────────────────────────────*
@@ -369,9 +282,7 @@ body.dark .task-footer {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/*────────────────────────────────────────────────────────────────*
- * NEW TASK HIGHLIGHT
- *────────────────────────────────────────────────────────────────*/
+/* Highlight for newly added tasks */
 .just-added {
   outline: 2px solid var(--color-accent);
   box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
