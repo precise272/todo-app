@@ -175,6 +175,13 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 /* Completed task */
 .completed .task-detail span { color: #999; text-decoration: line-through; }
 
+/* Confirmation highlight for newly added tasks */
+.just-added {
+  outline: 2px solid var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
+  transition: outline 0.3s ease, box-shadow 0.3s ease;
+}
+
 /*────────────────────────────────────────────────────────────────*
  * STICKY FOOTER (mobile only)
  *────────────────────────────────────────────────────────────────*/
