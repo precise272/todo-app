@@ -224,4 +224,15 @@ function renderTasks(tasks) {
 
     taskGroups.appendChild(ul);
   });
+
+  const footer = document.querySelector('.task-footer');
+const toggle = document.querySelector('.task-footer-toggle');
+
+toggle.addEventListener('click', () => {
+  footer.classList.toggle('expanded');
+  toggle.textContent = footer.classList.contains('expanded')
+    ? '✖ Close'
+    : '➕ Add Task';
+});
+
 }
