@@ -318,6 +318,63 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
   text-decoration: line-through;
 }
 
+
+/* Sticky footer container */
+.task-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+  backdrop-filter: blur(6px);
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  max-height: 48px; /* collapsed height */
+  z-index: 1000;
+}
+
+/* Dark mode */
+body.dark .task-footer {
+  background: rgba(30,31,38,0.95);
+  border-top: 1px solid #333;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+}
+
+/* Toggle bar */
+.task-footer-toggle {
+  text-align: center;
+  font-weight: 600;
+  padding: 12px;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+/* Hidden form initially */
+.task-footer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Expanded state */
+.task-footer.expanded {
+  max-height: 300px; /* enough to show form */
+  padding-top: 8px;
+}
+
+.task-footer.expanded .task-footer-form {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+
 /*────────────────────────────────────────────────────────────────*
  * ANIMATIONS
  *────────────────────────────────────────────────────────────────*/
