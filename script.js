@@ -1,118 +1,151 @@
+/**
+ * To-Do List App Script
+ * Author: Mike St.Amour - PDM
+ * Description: Handles task creation, rendering, category grouping, and dark mode toggle.
+ * Persistence: Uses localStorage to save tasks per browser session.
+ */
+
+// DOM Elements
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const categorySelect = document.getElementById("categorySelect");
 const taskGroups = document.getElementById("taskGroups");
+const darkModeToggle = document.getElementById("toggleDarkMode");
 
-// Load tasks on page load
+// Initialize app on page load
 window.addEventListener("DOMContentLoaded", () => {
-  const saved = JSON.parse(localStorage.getItem("tasks")) || [];
-  renderTasks(saved);
+  const savedTasks = getStoredTasks();
+  renderTasks(savedTasks);
 });
 
-// Add new task
+// Event: Add new task
 addTaskBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   const category = categorySelect.value;
+
   if (!text) return;
 
-  const all = JSON.parse(localStorage.getItem("tasks")) || [];
-  all.push({
-    id: Date.now(), // ✅ Unique ID
+  const tasks = getStoredTasks();
+  const newTask = {
+    id: Date.now(), // Unique timestamp-based ID
     text,
     completed: false,
     category
-  });
+  };
 
-  localStorage.setItem("tasks", JSON.stringify(all));
-  renderTasks(all);
+  tasks.push(newTask);
+  saveTasks(tasks);
+  renderTasks(tasks);
   taskInput.value = "";
 });
 
+// Event: Toggle dark mode
+darkModeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
-// Dark mode toggle
-document.getElementById("toggleDarkMode")
-  .addEventListener("click", () => document.body.classList.toggle("dark"));
+/**
+ * Retrieves tasks from localStorage
+ * @returns {Array} Array of task objects
+ */
+function getStoredTasks() {
+  return JSON.parse(localStorage.getItem("tasks")) || [];
+}
 
-// Render and group tasks
+/**
+ * Saves tasks to localStorage
+ * @param {Array} tasks - Array of task objects
+ */
+function saveTasks(tasks) {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+/**
+ * Renders tasks grouped by category
+ * @param {Array} tasks - Array of task objects
+ */
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
   // Group tasks by category
-  const grouped = tasks.reduce((acc, t) => {
-    const key = t.category || "Uncategorized";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(t);
+  const grouped = tasks.reduce((acc, task) => {
+    const key = task.category || "Uncategorized";
+    acc[key] = acc[key] || [];
+    acc[key].push(task);
     return acc;
   }, {});
 
-  // Sort categories: Urgent first, then alphabetical (excluding Urgent)
+  // Sort categories: Urgent first, then alphabetical
   const sortedCategories = Object.keys(grouped).sort((a, b) => {
     if (a === "Urgent") return -1;
     if (b === "Urgent") return 1;
-    if (a === "Uncategorized") return 1; // push Uncategorized to the end
+    if (a === "Uncategorized") return 1;
     if (b === "Uncategorized") return -1;
     return a.localeCompare(b);
   });
 
-  // Render each category
-  sortedCategories.forEach(cat => {
+  // Render each category and its tasks
+  sortedCategories.forEach(category => {
     const header = document.createElement("div");
     header.className = "category-header";
-    header.textContent = cat;
+    header.textContent = category;
     taskGroups.appendChild(header);
 
     const ul = document.createElement("ul");
 
-    // Sort tasks by creation order (oldest first)
-    grouped[cat].sort((a, b) => a.id - b.id).forEach(task => {
+    // Sort tasks by creation time (oldest first)
+    grouped[category].sort((a, b) => a.id - b.id).forEach((task, index) => {
       const li = document.createElement("li");
+      li.style.animationDelay = `${index * 0.05}s`; // Staggered fade-in
 
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = task.completed;
-      cb.addEventListener("change", () => {
-        task.completed = cb.checked;
-        saveAndRerender(tasks);
+      // Checkbox
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = task.completed;
+      checkbox.addEventListener("change", () => {
+        task.completed = checkbox.checked;
+        saveTasks(tasks);
+        renderTasks(tasks);
       });
 
+      // Task detail wrapper
       const detail = document.createElement("div");
       detail.className = "task-detail";
 
-      const span = document.createElement("span");
-      span.textContent = task.text;
-      span.addEventListener("click", e => {
-        span.classList.toggle("expanded");
+      const textSpan = document.createElement("span");
+      textSpan.textContent = task.text;
+      textSpan.addEventListener("click", e => {
+        textSpan.classList.toggle("expanded");
         e.stopPropagation();
       });
 
-      const small = document.createElement("small");
-      if (task.category) small.textContent = task.category;
+      const categoryLabel = document.createElement("small");
+      if (task.category) categoryLabel.textContent = task.category;
 
-      detail.appendChild(span);
-      detail.appendChild(small);
+      detail.appendChild(textSpan);
+      detail.appendChild(categoryLabel);
 
-      const del = document.createElement("button");
-      del.className = "delete-btn";
-      del.textContent = "❌";
-      del.addEventListener("click", () => {
-        const updated = tasks.filter(t => t.id !== task.id);
-        saveAndRerender(updated);
+      // Delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "❌";
+      deleteBtn.setAttribute("aria-label", "Delete task");
+      deleteBtn.addEventListener("click", () => {
+        const updatedTasks = tasks.filter(t => t.id !== task.id);
+        saveTasks(updatedTasks);
+        renderTasks(updatedTasks);
       });
 
+      // Completed styling
       if (task.completed) li.classList.add("completed");
 
-      li.appendChild(cb);
+      // Assemble task item
+      li.appendChild(checkbox);
       li.appendChild(detail);
-      li.appendChild(del);
+      li.appendChild(deleteBtn);
       ul.appendChild(li);
     });
 
     taskGroups.appendChild(ul);
   });
-}
-
-// helper to persist & redraw
-function saveAndRerender(tasks) {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-  renderTasks(tasks);
 }
