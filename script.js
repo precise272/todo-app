@@ -37,15 +37,23 @@ document.getElementById("toggleDarkMode")
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
-  // Group by category
+  // Group tasks by category
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
-    (acc[key] = acc[key] || []).push(t);
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(t);
     return acc;
   }, {});
 
-  // Build DOM
-  Object.keys(grouped).forEach(cat => {
+  // Sort categories: Urgent first, then alphabetical
+  const sortedCategories = Object.keys(grouped).sort((a, b) => {
+    if (a === "Urgent") return -1;
+    if (b === "Urgent") return 1;
+    return a.localeCompare(b);
+  });
+
+  // Render each category
+  sortedCategories.forEach(cat => {
     const header = document.createElement("div");
     header.className = "category-header";
     header.textContent = cat;
@@ -53,10 +61,10 @@ function renderTasks(tasks) {
 
     const ul = document.createElement("ul");
 
-    grouped[cat].forEach((task, i) => {
+    // Sort tasks by creation order (oldest first)
+    grouped[cat].sort((a, b) => a.id - b.id).forEach(task => {
       const li = document.createElement("li");
 
-      // checkbox
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = task.completed;
@@ -65,33 +73,29 @@ function renderTasks(tasks) {
         saveAndRerender(tasks);
       });
 
-      // middle detail wrapper
       const detail = document.createElement("div");
       detail.className = "task-detail";
 
       const span = document.createElement("span");
       span.textContent = task.text;
+      span.addEventListener("click", e => {
+        span.classList.toggle("expanded");
+        e.stopPropagation();
+      });
 
-// Toggle expanded class on the text span only
-span.addEventListener("click", e => {
-  span.classList.toggle("expanded");
-  e.stopPropagation();
-});
       const small = document.createElement("small");
       if (task.category) small.textContent = task.category;
 
       detail.appendChild(span);
       detail.appendChild(small);
 
-      // delete button
-  const del = document.createElement("button");
-del.className = "delete-btn";
-del.textContent = "❌";
-del.addEventListener("click", () => {
-  const updated = tasks.filter(t => t.id !== task.id);
-  saveAndRerender(updated);
-});
-
+      const del = document.createElement("button");
+      del.className = "delete-btn";
+      del.textContent = "❌";
+      del.addEventListener("click", () => {
+        const updated = tasks.filter(t => t.id !== task.id);
+        saveAndRerender(updated);
+      });
 
       if (task.completed) li.classList.add("completed");
 
@@ -104,6 +108,7 @@ del.addEventListener("click", () => {
     taskGroups.appendChild(ul);
   });
 }
+
 
 // helper to persist & redraw
 function saveAndRerender(tasks) {
