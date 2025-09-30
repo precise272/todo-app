@@ -225,7 +225,7 @@ function renderTasks(tasks) {
     taskGroups.appendChild(ul);
   });
 
-  const footer = document.querySelector('.task-footer');
+const footer = document.querySelector('.task-footer');
 const toggle = document.querySelector('.task-footer-toggle');
 
 toggle.addEventListener('click', () => {
@@ -234,5 +234,6 @@ toggle.addEventListener('click', () => {
     ? '✖ Close'
     : '➕ Add Task';
 });
+
 
 }
