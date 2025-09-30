@@ -28,7 +28,7 @@
 }
 
 html, body {
-  min-height: 100vh;        /* full viewport height */
+  min-height: 100vh;
   background: var(--color-bg);
   font-family: 'Inter', Arial, sans-serif;
   color: var(--color-text);
@@ -40,7 +40,7 @@ html, body {
 body::after {
   content: "";
   display: block;
-  height: 60px; /* extra breathing room */
+  height: 60px;
 }
 
 /*────────────────────────────────────────────────────────────────*
@@ -63,9 +63,7 @@ body.dark header h1 {
   color: transparent;
 }
 
-body.dark .tagline {
-  color: #aaa;
-}
+body.dark .tagline { color: #aaa; }
 
 body.dark .task-controls select,
 body.dark .task-controls input[type="text"] {
@@ -98,18 +96,14 @@ body.dark li:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.6);
 }
 
-body.dark .task-detail small {
-  color: #bbb;
-}
+body.dark .task-detail small { color: #bbb; }
 
 body.dark .task-actions button {
   background: #3a3c46;
   color: var(--color-text-light);
 }
 
-body.dark .task-actions button:hover {
-  background: #4a4d59;
-}
+body.dark .task-actions button:hover { background: #4a4d59; }
 
 body.dark .edit-input {
   background: #2a2c34;
@@ -220,11 +214,7 @@ header .tagline {
 }
 
 /* Task List */
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+ul { list-style: none; padding: 0; margin: 0; }
 
 li {
   background: var(--color-surface);
@@ -237,9 +227,7 @@ li {
   animation: fadeIn 0.3s ease forwards;
 }
 
-li:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-}
+li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 
 .task-main-row {
   display: flex;
@@ -263,9 +251,7 @@ li:hover {
   max-height: 2.6em;
 }
 
-.task-detail.expanded {
-  max-height: 10em;
-}
+.task-detail.expanded { max-height: 10em; }
 
 .task-detail span {
   font-size: 1rem;
@@ -276,9 +262,7 @@ li:hover {
   text-overflow: ellipsis;
 }
 
-.task-detail.expanded span {
-  white-space: normal;
-}
+.task-detail.expanded span { white-space: normal; }
 
 .task-detail small {
   font-size: 0.8rem;
@@ -303,9 +287,7 @@ li:hover {
   transition: background var(--transition);
 }
 
-.task-actions button:hover {
-  background: var(--color-border);
-}
+.task-actions button:hover { background: var(--color-border); }
 
 /* Edit input */
 .edit-input {
@@ -320,6 +302,12 @@ li:hover {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
   outline: none;
+}
+
+/* Completed task */
+.completed .task-detail span {
+  color: #999;
+  text-decoration: line-through;
 }
 
 /*────────────────────────────────────────────────────────────────*
@@ -360,7 +348,7 @@ li:hover {
  *────────────────────────────────────────────────────────────────*/
 @media (max-width: 600px) {
   body {
-    padding: 16px;
+    padding: 0; /* remove extra padding so sticky bar sits flush */
   }
 
   .container {
@@ -370,19 +358,33 @@ li:hover {
     box-shadow: none;
   }
 
+  /* Sticky footer bar for task controls */
   .task-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    padding: 12px 16px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
     flex-direction: column;
-    align-items: center;      /* center children horizontally */
+    align-items: center;
     gap: 12px;
-    width: 100%;
+    z-index: 1000;
+  }
+
+  body.dark .task-controls {
+    background: #1e1f26;
+    border-top: 1px solid #333;
   }
 
   .task-controls select,
   .task-controls input[type="text"],
   .task-controls button {
     width: 100%;
-    max-width: 100%;          /* prevent overflow */
-    box-sizing: border-box;   /* include padding in width */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   header h1 {
@@ -403,5 +405,10 @@ li:hover {
     flex: 1 1 auto;
     font-size: 1rem;
     padding: 6px 10px;
+  }
+
+  /* Add bottom padding to container so list isn't hidden behind sticky bar */
+  .container {
+    padding-bottom: 100px;
   }
 }
