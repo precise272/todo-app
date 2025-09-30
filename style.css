@@ -20,7 +20,7 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;        /* allow body to grow with content */
   background: var(--color-bg);
   font-family: 'Inter', Arial, sans-serif;
   color: var(--color-text);
@@ -32,9 +32,10 @@ html, body {
  * DARK THEME OVERRIDES
  *────────────────────────────────────────────────────────────────*/
 body.dark {
-  background: var(--color-muted-dark);
+  background: linear-gradient(180deg, #14151a 0%, #1e1f26 100%);
   color: var(--color-text-light);
 }
+
 
 body.dark .container {
   background: #1e1f26;
