@@ -26,13 +26,13 @@
 </head>
 <body>
   <main class="container">
-    <!-- Header with gradient text & tagline -->
+    <!-- Header -->
     <header>
       <h1>My To-Do<span class="accent">Pro</span></h1>
       <p class="tagline">Stay on top of your day with style</p>
     </header>
 
-    <!-- Task Controls Toolbar (desktop) -->
+    <!-- Task Controls Toolbar (desktop only) -->
     <section class="task-controls desktop-only" aria-label="Task Controls">
       <label for="categorySelect" class="visually-hidden">Category</label>
       <select id="categorySelect" name="category">
@@ -58,27 +58,29 @@
     <section id="taskGroups" aria-label="Task List"></section>
   </main>
 
-  <!-- Sticky footer bar (mobile only) -->
+  <!-- Sticky footer (mobile only) -->
   <div class="task-footer mobile-only">
     <div class="task-footer-toggle">➕ Add Task</div>
-    <div class="task-controls footer-controls" aria-label="Task Controls">
-      <label for="categorySelectMobile" class="visually-hidden">Category</label>
-      <select id="categorySelectMobile" name="category">
-        <option value="">No Category</option>
-        <option value="Work">Work</option>
-        <option value="Personal">Personal</option>
-        <option value="Urgent">Urgent</option>
-      </select>
+    <div class="footer-controls">
+      <div class="task-controls" aria-label="Task Controls">
+        <label for="categorySelectMobile" class="visually-hidden">Category</label>
+        <select id="categorySelectMobile" name="category">
+          <option value="">No Category</option>
+          <option value="Work">Work</option>
+          <option value="Personal">Personal</option>
+          <option value="Urgent">Urgent</option>
+        </select>
 
-      <label for="taskInputMobile" class="visually-hidden">New Task</label>
-      <input
-        type="text"
-        id="taskInputMobile"
-        name="task"
-        placeholder="Add a new task..."
-        autocomplete="off" />
+        <label for="taskInputMobile" class="visually-hidden">New Task</label>
+        <input
+          type="text"
+          id="taskInputMobile"
+          name="task"
+          placeholder="Add a new task..."
+          autocomplete="off" />
 
-      <button id="addTaskBtnMobile" type="button">Add Task</button>
+        <button id="addTaskBtnMobile" type="button">Add Task</button>
+      </div>
     </div>
   </div>
 
