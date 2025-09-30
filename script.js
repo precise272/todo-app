@@ -25,6 +25,13 @@ const categorySelect = document.getElementById("categorySelect");
 const taskGroups     = document.getElementById("taskGroups");
 const darkModeToggle = document.getElementById("toggleDarkMode");
 
+// Mobile footer elements
+const footer         = document.querySelector(".task-footer");
+const footerToggle   = document.querySelector(".task-footer-toggle");
+const addTaskBtnMobile = document.getElementById("addTaskBtnMobile");
+const taskInputMobile  = document.getElementById("taskInputMobile");
+const categorySelectMobile = document.getElementById("categorySelectMobile");
+
 let dragSourceId = null;
 
 // Initialize on load
@@ -32,22 +39,59 @@ window.addEventListener("DOMContentLoaded", () => {
   renderTasks(getStoredTasks());
 });
 
-// Add new task
+// Add new task (desktop)
 addTaskBtn.addEventListener("click", () => {
   const text     = taskInput.value.trim();
   const category = categorySelect.value;
   if (!text) return;
   const tasks = getStoredTasks();
-  tasks.push({ id: Date.now(), text, completed: false, category });
+  const newTask = { id: Date.now(), text, completed: false, category };
+  tasks.push(newTask);
   saveTasks(tasks);
   renderTasks(tasks);
   taskInput.value = "";
+
+  // Scroll to and highlight new task
+  focusOnTask(newTask.id);
 });
+
+// Add new task (mobile footer)
+if (addTaskBtnMobile) {
+  addTaskBtnMobile.addEventListener("click", () => {
+    const text     = taskInputMobile.value.trim();
+    const category = categorySelectMobile.value;
+    if (!text) return;
+    const tasks = getStoredTasks();
+    const newTask = { id: Date.now(), text, completed: false, category };
+    tasks.push(newTask);
+    saveTasks(tasks);
+    renderTasks(tasks);
+    taskInputMobile.value = "";
+    taskInputMobile.blur();
+
+    // Collapse footer
+    footer.classList.remove("expanded");
+    footerToggle.textContent = "➕ Add Task";
+
+    // Scroll to and highlight new task
+    focusOnTask(newTask.id);
+  });
+}
 
 // Toggle dark mode
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
+
+// Footer expand/collapse toggle
+if (footerToggle) {
+  footerToggle.addEventListener("click", () => {
+    footer.classList.toggle("expanded");
+    footerToggle.textContent = footer.classList.contains("expanded")
+      ? "✖ Close"
+      : "➕ Add Task";
+  });
+}
 
 // Storage helpers
 function getStoredTasks() {
@@ -63,14 +107,14 @@ function saveTasks(tasks) {
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
-  // Group by category in stored order
+  // Group by category
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
     (acc[key] = acc[key] || []).push(t);
     return acc;
   }, {});
 
-  // Sort categories: Urgent first, Uncategorized last, then alphabetically
+  // Sort categories
   const sortedCats = Object.keys(grouped).sort((a, b) => {
     if (a === "Urgent") return -1;
     if (b === "Urgent") return 1;
@@ -80,13 +124,11 @@ function renderTasks(tasks) {
   });
 
   sortedCats.forEach(category => {
-    // Category header
     const header = document.createElement("div");
     header.className   = "category-header";
     header.textContent = category;
     taskGroups.appendChild(header);
 
-    // List container (allows drop to change category)
     const ul = document.createElement("ul");
     ul.addEventListener("dragover", e => e.preventDefault());
     ul.addEventListener("drop", e => {
@@ -103,30 +145,25 @@ function renderTasks(tasks) {
       renderTasks(tasks);
     });
 
-    // Render each task in stored order
     grouped[category].forEach((task, idx) => {
       const li = document.createElement("li");
       li.draggable        = true;
       li.dataset.id       = task.id;
       li.style.animationDelay = `${idx * 0.05}s`;
 
-      // Drag-and-drop for reorder within list
+      // Drag-and-drop
       li.addEventListener("dragstart", e => {
         dragSourceId = task.id;
         li.classList.add("dragging");
         e.dataTransfer.setData("text/plain", task.id);
         e.dataTransfer.effectAllowed = "move";
       });
-      li.addEventListener("dragend", () => {
-        li.classList.remove("dragging");
-      });
+      li.addEventListener("dragend", () => li.classList.remove("dragging"));
       li.addEventListener("dragenter", e => {
         e.preventDefault();
         if (task.id !== dragSourceId) li.classList.add("drag-over");
       });
-      li.addEventListener("dragleave", () => {
-        li.classList.remove("drag-over");
-      });
+      li.addEventListener("dragleave", () => li.classList.remove("drag-over"));
       li.addEventListener("dragover", e => e.preventDefault());
       li.addEventListener("drop", e => {
         e.preventDefault();
@@ -143,7 +180,7 @@ function renderTasks(tasks) {
         renderTasks(all);
       });
 
-      // First row: checkbox + text/category
+      // Main row
       const mainRow = document.createElement("div");
       mainRow.className = "task-main-row";
 
@@ -167,25 +204,21 @@ function renderTasks(tasks) {
       mainRow.append(checkbox, detail);
       li.append(mainRow);
 
-      // Second row: action buttons
+      // Actions
       const actions = document.createElement("div");
       actions.className = "task-actions";
 
-      // Expand/collapse button
       const expandBtn = document.createElement("button");
       expandBtn.className   = "expand-btn";
       expandBtn.textContent = "▾";
-      expandBtn.setAttribute("aria-label", "Expand text");
       expandBtn.addEventListener("click", () => {
         const expanded = detail.classList.toggle("expanded");
         expandBtn.textContent = expanded ? "▴" : "▾";
       });
 
-      // Edit button
       const editBtn = document.createElement("button");
       editBtn.className   = "edit-btn";
       editBtn.textContent = "✏️";
-      editBtn.setAttribute("aria-label", "Edit task");
       editBtn.addEventListener("click", () => {
         const input = document.createElement("input");
         input.type      = "text";
@@ -203,11 +236,9 @@ function renderTasks(tasks) {
         });
       });
 
-      // Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.className   = "delete-btn";
       deleteBtn.textContent = "❌";
-      deleteBtn.setAttribute("aria-label", "Delete task");
       deleteBtn.addEventListener("click", () => {
         const updated = tasks.filter(t => t.id !== task.id);
         saveTasks(updated);
@@ -217,23 +248,22 @@ function renderTasks(tasks) {
       actions.append(expandBtn, editBtn, deleteBtn);
       li.append(actions);
 
-      // Completed styling
-      if (task.completed) li.classList.add("completed");
+            if (task.completed) li.classList.add("completed");
       ul.appendChild(li);
     });
 
     taskGroups.appendChild(ul);
   });
+}
 
-const footer = document.querySelector('.task-footer');
-const toggle = document.querySelector('.task-footer-toggle');
-
-toggle.addEventListener('click', () => {
-  footer.classList.toggle('expanded');
-  toggle.textContent = footer.classList.contains('expanded')
-    ? '✖ Close'
-    : '➕ Add Task';
-});
-
-
+/*───────────────────────────────────────────────────────────────*
+ * Helper: scroll to and highlight a newly added task
+ *───────────────────────────────────────────────────────────────*/
+function focusOnTask(taskId) {
+  const el = document.querySelector(`li[data-id="${taskId}"]`);
+  if (el) {
+    el.classList.add("just-added");
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => el.classList.remove("just-added"), 1200);
+  }
 }
