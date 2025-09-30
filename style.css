@@ -115,6 +115,7 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
   margin-bottom: 28px;
 }
 
+/* Shared sizing for select, input, buttons */
 .task-controls select,
 .task-controls input[type="text"],
 .task-controls button {
@@ -156,12 +157,29 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
   transform: translateY(-1px);
 }
 
-#toggleDarkMode { background: var(--color-accent); color: #fff; }
-
-/* Desktop-only toolbar fix */
-.task-controls.desktop-only {
-  flex-wrap: nowrap; /* force single row */
+#toggleDarkMode {
+  background: var(--color-accent);
+  color: #fff;
 }
+
+/*────────────────────────────────────────────────────────────────*
+ * DESKTOP TOOLBAR: TWO-ROW GRID
+ *────────────────────────────────────────────────────────────────*/
+.task-controls.desktop-only {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  grid-template-rows: auto auto;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* First row */
+.task-controls.desktop-only select      { grid-area: 1 / 1; }
+.task-controls.desktop-only input[type="text"] { grid-area: 1 / 2; }
+
+/* Second row */
+.task-controls.desktop-only #addTaskBtn      { grid-area: 2 / 1; }
+.task-controls.desktop-only #toggleDarkMode  { grid-area: 2 / 2; }
 
 /*────────────────────────────────────────────────────────────────*
  * CATEGORY HEADER
@@ -187,6 +205,7 @@ li {
 }
 li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 
+/* task rows */
 .task-main-row { display: flex; align-items: flex-start; gap: var(--gap); }
 .task-main-row input[type="checkbox"] { margin-top: 4px; width: 20px; height: 20px; flex-shrink: 0; }
 
