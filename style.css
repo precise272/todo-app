@@ -175,30 +175,25 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 /* Completed task */
 .completed .task-detail span { color: #999; text-decoration: line-through; }
 
-/* Confirmation highlight for newly added tasks */
-.just-added {
-  outline: 2px solid var(--color-accent);
-  box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
-  transition: outline 0.3s ease, box-shadow 0.3s ease;
-}
-
 /*────────────────────────────────────────────────────────────────*
- * STICKY FOOTER
+ * STICKY FOOTER (desktop + mobile)
  *────────────────────────────────────────────────────────────────*/
-
-/* Base footer styles (applies to all viewports, but hidden by JS until needed) */
 .task-footer {
-  display: none; /* JS will toggle this on desktop */
+  display: none; /* hidden by default, JS toggles on desktop */
   position: fixed;
   bottom: 0; left: 0; right: 0;
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
   backdrop-filter: blur(6px);
-  transition: max-height 0.3s ease;
   overflow: hidden;
-  max-height: 48px; /* collapsed */
+  max-height: 48px; /* collapsed height */
   z-index: 1000;
+
+  /* Animation states */
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
 }
 
 body.dark .task-footer {
@@ -208,7 +203,48 @@ body.dark .task-footer {
   backdrop-filter: blur(8px);
 }
 
-/* Mobile only overrides */
+/* When JS toggles .visible on desktop */
+.task-footer.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Toggle bar */
+.task-footer-toggle {
+  text-align: center;
+  font-weight: 600;
+  padding: 12px;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+/* Footer controls hidden by default everywhere */
+.task-footer .footer-controls {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 16px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+/* Expanded state (applies globally) */
+.task-footer.expanded {
+  max-height: 320px;
+}
+
+.task-footer.expanded .footer-controls {
+  display: flex;
+  opacity: 1;
+  max-height: 500px; /* enough to show form */
+}
+
+/*────────────────────────────────────────────────────────────────*
+ * RESPONSIVE (mobile overrides)
+ *────────────────────────────────────────────────────────────────*/
 @media (max-width: 600px) {
   /* Hide the desktop toolbar */
   .desktop-only { display: none; }
@@ -216,32 +252,6 @@ body.dark .task-footer {
   /* On mobile, footer is always visible */
   .task-footer {
     display: block;
-  }
-
-  /* Toggle bar */
-  .task-footer-toggle {
-    text-align: center;
-    font-weight: 600;
-    padding: 12px;
-    cursor: pointer;
-    color: var(--color-primary);
-  }
-
-  /* Footer controls hidden by default */
-  .task-footer .footer-controls {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    padding: 0 16px 16px;
-  }
-
-  /* Expanded state */
-  .task-footer.expanded {
-    max-height: 320px;
-  }
-
-  .task-footer.expanded .footer-controls {
-    display: flex;
   }
 
   /* Ensure inputs/buttons fit mobile width */
@@ -259,7 +269,6 @@ body.dark .task-footer {
   }
 }
 
-
 /*────────────────────────────────────────────────────────────────*
  * ANIMATIONS
  *────────────────────────────────────────────────────────────────*/
@@ -271,4 +280,11 @@ body.dark .task-footer {
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(30px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Highlight for newly added tasks */
+.just-added {
+  outline: 2px solid var(--color-accent);
+  box-shadow: 0 0 0 4px rgba(80, 227, 194, 0.2);
+  transition: outline 0.3s ease, box-shadow 0.3s ease;
 }
