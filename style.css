@@ -113,7 +113,6 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
   align-items: center;
   gap: 12px;
   margin-bottom: 28px;
-  flex-wrap: nowrap;
 }
 
 .task-controls select,
@@ -158,6 +157,11 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 }
 
 #toggleDarkMode { background: var(--color-accent); color: #fff; }
+
+/* Desktop-only toolbar fix */
+.task-controls.desktop-only {
+  flex-wrap: nowrap; /* force single row */
+}
 
 /*────────────────────────────────────────────────────────────────*
  * CATEGORY HEADER
@@ -214,13 +218,15 @@ li:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
  * EDIT INPUT
  *────────────────────────────────────────────────────────────────*/
 .edit-input {
-  width: 100%; padding: 8px; border-radius: var(--radius);
+  width: 100%;
+  padding: 8px;
+  border-radius: var(--radius);
   border: 1px solid #888;
   transition: border var(--transition), box-shadow var(--transition);
 }
 .edit-input:focus {
   border-color: var(--color-primary);
-  box-shadow:   0 0 0 2px rgba(74,144,226,0.2);
+  box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
   outline: none;
 }
 
