@@ -1,7 +1,7 @@
-/* — Base layout — */
+/* — Typography & Base Layout — */
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  font-family: 'Inter', Arial, sans-serif; /* Modern, readable font */
+  background: #f9f9fb;
   display: flex;
   justify-content: center;
   padding: 50px;
@@ -13,45 +13,52 @@ body.dark {
   color: #ddd;
 }
 
+/* — App Container — */
 .container {
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 24px;
+  border-radius: 12px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   transition: background 0.3s ease;
+  animation: fadeSlideIn 0.6s ease-out;
 }
 
 body.dark .container {
   background: #2c2c2c;
 }
 
-/* — Form elements — */
+/* — Form Elements — */
 input[type="text"],
 select,
 button {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
   box-sizing: border-box;
-  font-size: 14px;
-  border-radius: 4px;
+  font-size: 15px;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  font-family: inherit;
 }
 
+/* — Primary Button — */
 button {
-  background: #007bff;
+  background: #4a90e2;
   color: white;
   border: none;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: #0056b3;
+  background: #357ab8;
+  transform: translateY(-1px);
 }
 
+/* — Dark Mode Toggle — */
 #toggleDarkMode {
   background: #444;
 }
@@ -61,11 +68,11 @@ body.dark #toggleDarkMode {
   color: #222;
 }
 
-/* — Category header — */
+/* — Category Header — */
 .category-header {
-  font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 12px;
   font-size: 16px;
   color: #333;
 }
@@ -74,57 +81,65 @@ body.dark .category-header {
   color: #ccc;
 }
 
-/* — Task list & rows — */
+/* — Task List — */
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* — Task Item — */
 li {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto; /* checkbox | task | delete */
   align-items: center;
-  background: #eee;
-  margin-bottom: 10px;
-  padding: 10px 12px; /* 👈 adds right-side padding */
-  border-radius: 4px;
-  animation: fadeIn 0.3s ease;
-  width: 100%;
-  column-gap: 10px;
+  background: #fff;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  animation: fadeIn 0.4s ease forwards;
+  opacity: 0;
+  column-gap: 12px;
   box-sizing: border-box;
 }
 
-
-body.dark li {
-  background: #444;
+li:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+body.dark li {
+  background: #2a2a2a;
+  box-shadow: none;
+}
+
+/* — Checkbox — */
 li input[type="checkbox"] {
   flex: 0 0 auto;
   margin-right: 10px;
 }
 
-/* — Task detail — */
+/* — Task Detail — */
 .task-detail {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 100%;         /* 👈 prevents overflow */
-  overflow: hidden;        /* 👈 clips child span */
-  box-sizing: border-box;  /* 👈 respects padding */
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .task-detail span {
   display: block;
   width: 100%;
-  max-width: 100%;         /* 👈 prevents overflow */
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
   padding-right: 12px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
 .task-detail span.expanded {
@@ -142,14 +157,14 @@ li input[type="checkbox"] {
   color: #555;
 }
 
-/* — Buttons — */
+/* — Edit Button — */
 .edit-btn {
   flex: 0 0 auto;
   margin-left: 8px;
   background: transparent;
   border: none;
   font-size: 16px;
-  color: #007bff;
+  color: #4a90e2;
   cursor: pointer;
 }
 
@@ -157,6 +172,7 @@ li input[type="checkbox"] {
   transform: scale(1.1);
 }
 
+/* — Edit Input — */
 .edit-input {
   flex: 1 1 auto;
   padding: 6px;
@@ -165,6 +181,7 @@ li input[type="checkbox"] {
   border-radius: 4px;
 }
 
+/* — Delete Button — */
 .delete-btn {
   background: transparent;
   border: none;
@@ -174,24 +191,31 @@ li input[type="checkbox"] {
   transition: transform 0.2s ease;
   padding: 4px 8px;
   width: auto;
-  justify-self: end; /* 👈 keeps it pinned right */
+  justify-self: end;
 }
 
 .delete-btn:hover {
   transform: scale(1.2);
 }
 
-/* — Completed styling — */
+/* — Completed Task — */
 .completed span {
   text-decoration: line-through;
   color: gray;
 }
 
-/* — Animation — */
+/* — Animations — */
 @keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -199,11 +223,12 @@ li input[type="checkbox"] {
   }
 }
 
-/* — Responsive tweaks — */
+/* — Responsive Design — */
 @media (max-width: 480px) {
   .container {
-    padding: 15px;
+    padding: 16px;
   }
+
   input, select, button {
     font-size: 16px;
   }
