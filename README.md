@@ -2,7 +2,7 @@ My To-Do List App
 This is a responsive, theme-aware to-do list application built as part of my front-end portfolio. The goal of this project was to demonstrate clean UI design, modular CSS architecture, and accessible markup using semantic HTML and vanilla JavaScript.
 
 Overview
-The app allows users to manage tasks across multiple categories with a streamlined interface optimized for both desktop and mobile. It includes dark mode support, animated task rendering, and a sticky footer for mobile task entry.
+The app allows users to manage tasks across multiple categories with a streamlined interface optimized for both desktop and mobile. It includes dark mode support, animated task rendering, and a sticky footer for mobile task entry. The codebase is lightweight and easily adaptable—ready to be extended into a full-featured web app or converted into a native mobile application.
 
 Features
 Category-based task organization (Work, Personal, Urgent)
