@@ -4,21 +4,19 @@
  * Description: Create, edit, delete, categorize, and reorder tasks.
  */
 
-// DOM Elements
+// Grab DOM elements
 const taskInput      = document.getElementById("taskInput");
 const addTaskBtn     = document.getElementById("addTaskBtn");
 const categorySelect = document.getElementById("categorySelect");
 const taskGroups     = document.getElementById("taskGroups");
 const darkModeToggle = document.getElementById("toggleDarkMode");
 
-let dragSourceId = null; // ID of the task being dragged
-
-// Initialize app
+// Initialize on page load
 window.addEventListener("DOMContentLoaded", () => {
   renderTasks(getStoredTasks());
 });
 
-// Add Task
+// Add a new task
 addTaskBtn.addEventListener("click", () => {
   const text     = taskInput.value.trim();
   const category = categorySelect.value;
@@ -31,34 +29,35 @@ addTaskBtn.addEventListener("click", () => {
   taskInput.value = "";
 });
 
-// Dark Mode Toggle
+// Toggle dark mode
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Helpers: storage
+// Helpers: localStorage
 function getStoredTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
 }
+
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 /**
- * Render tasks, grouped & sorted by category, with drag-and-drop.
- * @param {Array} tasks 
+ * Render tasks grouped by category; sets up drag-and-drop and Edit/Delete.
+ * @param {Array} tasks
  */
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
 
-  // Group by category
+  // 1. Group tasks by category
   const grouped = tasks.reduce((acc, t) => {
     const key = t.category || "Uncategorized";
     (acc[key] = acc[key] || []).push(t);
     return acc;
   }, {});
 
-  // Sort categories: Urgent first, Uncategorized last, others alpha
+  // 2. Sort categories: Urgent first, Uncategorized last, then alpha
   const sortedCats = Object.keys(grouped).sort((a, b) => {
     if (a === "Urgent") return -1;
     if (b === "Urgent") return 1;
@@ -67,6 +66,7 @@ function renderTasks(tasks) {
     return a.localeCompare(b);
   });
 
+  // 3. Render each category section
   sortedCats.forEach(cat => {
     // Category header
     const header = document.createElement("div");
@@ -80,32 +80,47 @@ function renderTasks(tasks) {
     grouped[cat]
       .sort((a, b) => a.id - b.id)
       .forEach((task, idx) => {
-        // Task row
+        // ----- Build <li> -----
         const li = document.createElement("li");
-        li.draggable      = true;
-        li.dataset.id     = task.id;
+        li.draggable        = true;
+        li.dataset.id      = task.id;
         li.style.animationDelay = `${idx * 0.05}s`;
 
-        // Drag events for reordering
-        li.addEventListener("dragstart", () => {
-          dragSourceId = task.id;
+        // Drag start: attach the task ID to dataTransfer
+        li.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("text/plain", task.id);
+          e.dataTransfer.effectAllowed = "move";
           li.classList.add("dragging");
         });
+
+        // Drag end: clean up styles
         li.addEventListener("dragend", () => {
           li.classList.remove("dragging");
         });
-        li.addEventListener("dragenter", () => {
-          if (task.id !== dragSourceId) li.classList.add("drag-over");
+
+        // Drag enter/leave: visual feedback
+        li.addEventListener("dragenter", e => {
+          e.preventDefault();
+          if (!li.classList.contains("dragging")) {
+            li.classList.add("drag-over");
+          }
         });
         li.addEventListener("dragleave", () => {
           li.classList.remove("drag-over");
         });
+
+        // Drag over: must preventDefault to allow drop
         li.addEventListener("dragover", e => {
           e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
         });
-        li.addEventListener("drop", () => {
+
+        // Drop: reorder array, save, rerender
+        li.addEventListener("drop", e => {
+          e.preventDefault();
           li.classList.remove("drag-over");
-          const fromId = dragSourceId;
+
+          const fromId = Number(e.dataTransfer.getData("text/plain"));
           const toId   = task.id;
           if (fromId === toId) return;
 
@@ -119,7 +134,7 @@ function renderTasks(tasks) {
           renderTasks(allTasks);
         });
 
-        // Checkbox
+        // ----- Checkbox -----
         const checkbox = document.createElement("input");
         checkbox.type    = "checkbox";
         checkbox.checked = task.completed;
@@ -129,10 +144,10 @@ function renderTasks(tasks) {
           renderTasks(tasks);
         });
 
-        // Detail (text + category label)
+        // ----- Detail (text + category) -----
         const detail = document.createElement("div");
         detail.className = "task-detail";
-        const span = document.createElement("span");
+        const span  = document.createElement("span");
         span.textContent = task.text;
         span.addEventListener("click", e => {
           detail.classList.toggle("expanded");
@@ -142,11 +157,11 @@ function renderTasks(tasks) {
         if (task.category) small.textContent = task.category;
         detail.append(span, small);
 
-        // Action buttons (Edit + Delete)
+        // ----- Actions (Edit + Delete) -----
         const btnGroup = document.createElement("div");
         btnGroup.className = "task-actions";
 
-        // Edit
+        // Edit button
         const editBtn = document.createElement("button");
         editBtn.className    = "edit-btn";
         editBtn.textContent  = "✏️";
@@ -158,6 +173,7 @@ function renderTasks(tasks) {
           input.className = "edit-input";
           detail.replaceChild(input, span);
           input.focus();
+
           input.addEventListener("blur", () => {
             task.text = input.value.trim() || task.text;
             saveTasks(tasks);
@@ -168,7 +184,7 @@ function renderTasks(tasks) {
           });
         });
 
-        // Delete
+        // Delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.className   = "delete-btn";
         deleteBtn.textContent = "❌";
@@ -184,7 +200,8 @@ function renderTasks(tasks) {
         // Completed styling
         if (task.completed) li.classList.add("completed");
 
-        // Assemble row: checkbox | detail | actions
+        // ----- Assemble Row -----
+        // grid-template-columns: auto 1fr auto in CSS
         li.append(checkbox, detail, btnGroup);
         ul.appendChild(li);
       });
