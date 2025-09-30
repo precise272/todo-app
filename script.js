@@ -1,7 +1,7 @@
 /**
  * To-Do List App Script
- * Author: Mike St.Amour - PDM
- * Description: Handles task creation, rendering, category grouping, and dark mode toggle.
+ * Author: Mike
+ * Description: Handles task creation, rendering, editing, category grouping, and dark mode toggle.
  * Persistence: Uses localStorage to save tasks per browser session.
  */
 
@@ -22,12 +22,11 @@ window.addEventListener("DOMContentLoaded", () => {
 addTaskBtn.addEventListener("click", () => {
   const text = taskInput.value.trim();
   const category = categorySelect.value;
-
   if (!text) return;
 
   const tasks = getStoredTasks();
   const newTask = {
-    id: Date.now(), // Unique timestamp-based ID
+    id: Date.now(),
     text,
     completed: false,
     category
@@ -46,7 +45,6 @@ darkModeToggle.addEventListener("click", () => {
 
 /**
  * Retrieves tasks from localStorage
- * @returns {Array} Array of task objects
  */
 function getStoredTasks() {
   return JSON.parse(localStorage.getItem("tasks")) || [];
@@ -54,7 +52,6 @@ function getStoredTasks() {
 
 /**
  * Saves tasks to localStorage
- * @param {Array} tasks - Array of task objects
  */
 function saveTasks(tasks) {
   localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -62,7 +59,6 @@ function saveTasks(tasks) {
 
 /**
  * Renders tasks grouped by category
- * @param {Array} tasks - Array of task objects
  */
 function renderTasks(tasks) {
   taskGroups.innerHTML = "";
@@ -84,7 +80,7 @@ function renderTasks(tasks) {
     return a.localeCompare(b);
   });
 
-  // Render each category and its tasks
+  // Render each category
   sortedCategories.forEach(category => {
     const header = document.createElement("div");
     header.className = "category-header";
@@ -93,10 +89,9 @@ function renderTasks(tasks) {
 
     const ul = document.createElement("ul");
 
-    // Sort tasks by creation time (oldest first)
     grouped[category].sort((a, b) => a.id - b.id).forEach((task, index) => {
       const li = document.createElement("li");
-      li.style.animationDelay = `${index * 0.05}s`; // Staggered fade-in
+      li.style.animationDelay = `${index * 0.05}s`;
 
       // Checkbox
       const checkbox = document.createElement("input");
@@ -108,7 +103,7 @@ function renderTasks(tasks) {
         renderTasks(tasks);
       });
 
-      // Task detail wrapper
+      // Task detail
       const detail = document.createElement("div");
       detail.className = "task-detail";
 
@@ -125,6 +120,42 @@ function renderTasks(tasks) {
       detail.appendChild(textSpan);
       detail.appendChild(categoryLabel);
 
+      // Button group container
+      const btnGroup = document.createElement("div");
+      btnGroup.style.display = "flex";
+      btnGroup.style.gap = "8px"; // spacing for mobile usability
+
+      // Edit button
+      const editBtn = document.createElement("button");
+      editBtn.className = "edit-btn";
+      editBtn.textContent = "✏️";
+      editBtn.setAttribute("aria-label", "Edit task");
+      editBtn.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = task.text;
+        input.className = "edit-input";
+        detail.replaceChild(input, textSpan);
+        input.focus();
+
+        input.addEventListener("blur", () => {
+          task.text = input.value.trim() || task.text;
+          saveTasks(tasks);
+          renderTasks(tasks);
+        });
+
+        input.addEventListener("keydown", e => {
+          if (e.key === "Enter") input.blur();
+        });
+      });
+
+      // Drag button (non-functional placeholder)
+      const dragBtn = document.createElement("button");
+      dragBtn.className = "drag-btn";
+      dragBtn.textContent = "↕️";
+      dragBtn.setAttribute("aria-label", "Drag task");
+      dragBtn.style.cursor = "grab";
+
       // Delete button
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
@@ -136,13 +167,15 @@ function renderTasks(tasks) {
         renderTasks(updatedTasks);
       });
 
-      // Completed styling
       if (task.completed) li.classList.add("completed");
 
       // Assemble task item
       li.appendChild(checkbox);
       li.appendChild(detail);
-      li.appendChild(deleteBtn);
+      btnGroup.appendChild(editBtn);
+      btnGroup.appendChild(dragBtn);
+      btnGroup.appendChild(deleteBtn);
+      li.appendChild(btnGroup);
       ul.appendChild(li);
     });
 
