@@ -256,6 +256,8 @@ function renderTasks(tasks) {
   });
 }
 
+// ... all your existing code above ...
+
 /*───────────────────────────────────────────────────────────────*
  * Helper: scroll to and highlight a newly added task
  *───────────────────────────────────────────────────────────────*/
@@ -266,4 +268,29 @@ function focusOnTask(taskId) {
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => el.classList.remove("just-added"), 1200);
   }
+}
+
+/*───────────────────────────────────────────────────────────────*
+ * Desktop footer visibility logic
+ *───────────────────────────────────────────────────────────────*/
+const desktopToolbar = document.querySelector(".task-controls.desktop-only");
+const footerBar = document.querySelector(".task-footer");
+
+if (desktopToolbar && footerBar) {
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Toolbar visible at top → hide footer
+          footerBar.style.display = "none";
+        } else {
+          // Toolbar scrolled out of view → show footer
+          footerBar.style.display = "block";
+        }
+      });
+    },
+    { root: null, threshold: 0 } // watch visibility in viewport
+  );
+
+  observer.observe(desktopToolbar);
 }
