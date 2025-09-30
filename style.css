@@ -1,6 +1,6 @@
 /* — Typography & Base Layout — */
 body {
-  font-family: 'Inter', Arial, sans-serif; /* Modern, readable font */
+  font-family: 'Inter', Arial, sans-serif;
   background: #f9f9fb;
   display: flex;
   justify-content: center;
@@ -90,9 +90,6 @@ ul {
 
 /* — Task Item — */
 li {
-  display: grid;
-  grid-template-columns: auto 1fr auto; /* checkbox | task | delete */
-  align-items: center;
   background: #fff;
   margin-bottom: 12px;
   padding: 12px 16px;
@@ -100,7 +97,6 @@ li {
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
   animation: fadeIn 0.4s ease forwards;
   opacity: 0;
-  column-gap: 12px;
   box-sizing: border-box;
 }
 
@@ -115,8 +111,7 @@ body.dark li {
 
 /* — Checkbox — */
 li input[type="checkbox"] {
-  flex: 0 0 auto;
-  margin-right: 10px;
+  margin-bottom: 8px;
 }
 
 /* — Task Detail — */
@@ -143,12 +138,10 @@ li input[type="checkbox"] {
 }
 
 .task-detail span.expanded {
-  max-height: none;
   white-space: normal;
   word-break: break-word;
   overflow: visible;
   text-overflow: unset;
-  padding-right: 12px;
 }
 
 .task-detail small {
@@ -157,45 +150,45 @@ li input[type="checkbox"] {
   color: #555;
 }
 
-/* — Edit Button — */
-.edit-btn {
-  flex: 0 0 auto;
-  margin-left: 8px;
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  color: #4a90e2;
-  cursor: pointer;
+/* — Task Actions Row — */
+.task-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  padding-top: 8px;
+  flex-wrap: wrap;
 }
 
-.edit-btn:hover {
-  transform: scale(1.1);
+.task-actions button {
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.task-actions button:hover {
+  background: #e0e0e0;
+}
+
+body.dark .task-actions button {
+  background: #333;
+  color: #eee;
+}
+
+body.dark .task-actions button:hover {
+  background: #444;
 }
 
 /* — Edit Input — */
 .edit-input {
-  flex: 1 1 auto;
   padding: 6px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-/* — Delete Button — */
-.delete-btn {
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  color: #ff4d4d;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  padding: 4px 8px;
-  width: auto;
-  justify-self: end;
-}
-
-.delete-btn:hover {
-  transform: scale(1.2);
+  width: 100%;
 }
 
 /* — Completed Task — */
@@ -231,5 +224,13 @@ li input[type="checkbox"] {
 
   input, select, button {
     font-size: 16px;
+  }
+
+  .task-actions {
+    gap: 8px;
+  }
+
+  .task-actions button {
+    flex: 1 1 auto;
   }
 }
