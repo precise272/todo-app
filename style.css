@@ -180,6 +180,9 @@ header .tagline { margin-top: 6px; font-size: 1rem; color: #666; }
 /* Second row */
 .task-controls.desktop-only #addTaskBtn      { grid-area: 2 / 1; }
 .task-controls.desktop-only #toggleDarkMode  { grid-area: 2 / 2; }
+.task-controls.desktop-only button {
+  width: 160px;
+}
 
 /*────────────────────────────────────────────────────────────────*
  * CATEGORY HEADER
